@@ -57,9 +57,7 @@ exports.send = function(user,recip,subj,body,callback){
         })
       },
       function(seriesCb){
-        pg.connect(database,function(err,client,done){
-          client.query("")
-        })
+        seriesCb()
       },
     ],function(emailErr){
       callback(emailErr)
