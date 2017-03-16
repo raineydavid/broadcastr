@@ -221,8 +221,9 @@ app.post('/login', function(req,res){
               req.session.user=snapshot.val()
               req.session.user.id = user.uid
               if(snapshot.val().tokens){
-                res.redirect('/#newUser')
+                res.redirect('/')
               }else{
+                res.redirect('/#newUser')
               }
             })
           })
@@ -254,14 +255,12 @@ app.get('/error',function(req,res){
 })
 
 app.post('/send',function(req,res){
-  db.ref('/users/'+req.session.user.id).once("value",function(snapshot){
-    emailSend.send(snapshot.val(),arrayToObjects(parse.CSVToArray(req.body.recipients,"\t"),['email','name']).filter(function(d){return d.email!=""}),req.body.subject,req.body.body,function(emailErr,tokenError,newTokens){
+    emailSend.send(req.session.user,arrayToObjects(parse.CSVToArray(req.body.recipients,"\t"),['email','name']).filter(function(d){return d.email!=""}),req.body.subject,req.body.body,function(emailErr,tokenError,newTokens){
       if(emailErr){console.log(emailErr)}
       if(tokenError){console.log(tokenError)}
       db.ref('/users/'+req.session.user.id+"/tokens").set(newTokens)
       res.redirect('/')
     })
-  })
 })
 
 app.get('/gm/auth/url',function(req,res){
