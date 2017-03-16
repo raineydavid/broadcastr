@@ -96,7 +96,7 @@ var rollback = function(client, done) {
   });
 };
 
-var logDb = process.env.DATABASE_URL
+var database = process.env.DATABASE_URL
 
 var objectToArray = function(input){
     return Object.keys(input).map(function(d){
