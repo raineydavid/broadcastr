@@ -160,6 +160,10 @@ app.get('*',function(req,res,next){
 })
 */
 
+app.get('/img/echo_logo.png',function(req,res){
+  res.sendFile(__dirname+'/public/echo_logo.png')
+})
+
 app.get('/track/:email/:date/pixel.png',function(req,res){
   var decoded_email = Buffer(hashids.decodeHex(req.params.email),'hex').toString('utf8'),
       decoded_date = hashids.decode(req.params.date)[0];
