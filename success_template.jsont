@@ -1,0 +1,8 @@
+<html>
+<script src=/js/success.js type="text/javascript"></script>
+<script language="javascript" type="text/javascript">
+function windowClose() {
+window.close();
+}
+</script>
+</html>

@@ -1,0 +1,7 @@
+{
+  "name": "270 Capacity Tracker",
+  "description": "Hours tracking for our homies",
+  "repository": "https://github.com/heroku/node-js-getting-started",
+  "logo": "http://node-js-sample.herokuapp.com/node.svg",
+  "keywords": ["node", "express", "static"]
+}

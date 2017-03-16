@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+  <title>{title}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/jpg" href="../echo_logo.png">
+</head>
+<body>
+
+<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+<link rel="stylesheet" type="text/css" href='/stylesheets/fonts.css'>
+<script src="/javascripts/d3.v3.min.js" type="text/javascript"></script>
+<script src="/javascripts/jquery-2.2.3.js" type="text/javascript"></script>
+<script src="/javascripts/bootstrap.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-select.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.css">
+<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap-sortable.css">
+<script src="/javascripts/bootstrap-select.js" type="text/javascript"></script>
+<script src="/javascripts/moment.min.js" type="text/javascript"></script>
+<script src="/javascripts/fuse.min.js" type="text/javascript"></script>
+<script src="/javascripts/bootstrap-sortable.js" type="text/javascript"></script>
+<script src="/javascripts/navbar.js" type="text/javascript"></script>
+<script src="/javascripts/password-generator.js" type="text/javascript"></script>
+<script src="https://use.fontawesome.com/e25720062f.js"></script>
+<script src={js} type="text/javascript"></script>
+
+</body>
