@@ -60,6 +60,59 @@ var dateFormat = function(date){
   return "20"+splitDate[2]+"-"+splitDate[0]+"-"+splitDate[1]
 }
 
+//MODALS
+
+var modalContent = d3.select("body").append("div").append("div")
+    .attr("class","modal fade")
+    .attr("id","newUser")
+    .attr("tabindex","-1")
+    .attr("role","dialog")
+    .attr("aria-labelledby","modal")
+    .append("div")
+      .attr("class","modal-dialog modal-sm")
+      .attr("role","document")
+      .style("width","30%")
+    .append("div")
+      .attr("class","modal-content")
+
+var modalBody = modalContent.append("div")
+  .attr("class","modal-body clearfix")
+  .style("padding-top","0px")
+  .style("text-align","center")
+
+modalBody.append("h2")
+  .attr("class","modal-title logoLightBlue-500")
+  .attr("id","modalHeader")
+  .style("margin-bottom","5px")
+  .text("Welcome to Echo!")
+
+modalBody.append("div")
+  .attr("class","row col-xs-12")
+  .style("margin-bottom","20px")
+  .text("Echo is a tool to help you have one-on-one conversations with grassroots supporters over email.")
+
+modalBody.append("div")
+  .attr("class","row col-xs-12")
+  .style("margin-bottom","20px")
+  .text("We connect to your email account to send emails as you, and supporters can reply directly to your inbox to start a conversation.")
+
+modalBody.append("div")
+  .attr("class","row col-xs-12")
+  .style("margin-bottom","20px")
+  .text("Click the button below to connect your email account and get started!")
+
+modalBody.append("div")
+  .attr("class","row")
+  .append("div")
+    .attr("class","buttonDiv col-xs-12")
+      .append("button")
+        .attr("class","btn btn-default logoLightBlue-bg-500")
+        .text("Connect My Email")
+        .style("margin","auto")
+        .on("click",function(){
+          window.location.replace('/gm/auth/url')
+        })
+
 //Tooltip
 
 var tooltipDisplay = function tooltipDisplay(msg){
@@ -208,6 +261,10 @@ ws.onmessage = function(event){
               return d.format(card[d.name])
             })
         })
+
+        if(location.hash==="#newUser"){
+          $('#newUser').modal('show')
+        }
 
     break;
   }

@@ -34,12 +34,14 @@ var transporter = nodemailer.createTransport({
 });
 
 exports.send = function(user,recip,subj,body,callback){
+  var errorCount = 0,
+      sendCount = 0;
+
   async.eachLimit(recip,1,function(d,callback){
     var emailTrack = hashids.encodeHex(Buffer(d.email).toString('hex')),
-        dateTrack = hashids.encode(dateformat(Date.now(),"YYYYMMDD"))
+        uncodedDate = dateformat(Date.now(),"yyyymmddHHMM"),
+        dateTrack = hashids.encode(uncodedDate)
 
-        console.log(emailTrack)
-        console.log(dateTrack)
     async.series([
       function(seriesCb){
         transporter.sendMail({
@@ -53,11 +55,22 @@ exports.send = function(user,recip,subj,body,callback){
             accessToken:user.tokens.access_token
           }
         },function(emailErr){
+          if(emailErr){
+            errorCount++
+          }else{
+            sendCount++
+          }
           seriesCb(emailErr)
         })
       },
       function(seriesCb){
-        seriesCb()
+        pg.connect(database,function(dbErr,client,done){
+          if(dbErr){seriesCb(dbErr)}else{
+            client.query("INSERT INTO echo.activity_logs (timestamp,datecode,sender_id,sender_email,body,recipient_email,action) VALUES (current_timestamp,$1,$2,$3,$4,$5,'send')",[uncodedDate,user.id,user.email,body.replace("|*NAME*|",d.name),d.email],function(queryErr){
+              seriesCb(queryErr)
+            })
+          }
+        })
       },
     ],function(emailErr){
       callback(emailErr)
@@ -68,7 +81,7 @@ exports.send = function(user,recip,subj,body,callback){
       refresh_token: user.tokens.refresh_token
     })
     oauth2Client.refreshAccessToken(function(tokenError,newTokens){
-      callback(emailErr,tokenError,newTokens)
+      callback(emailErr,tokenError,newTokens,errorCount,sendCount)
     })
   })
 }

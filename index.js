@@ -160,15 +160,35 @@ app.get('*',function(req,res,next){
 })
 */
 
-app.get('/track/:email/:date',function(req,res){
+app.get('/track/:email/:date/pixel.png',function(req,res){
   var decoded_email = Buffer(hashids.decodeHex(req.params.email),'hex').toString('utf8'),
-      decoded_date = hashids.decode(req.params.date);
-  console.log(decoded_email)
-  console.log(decoded_date)
+      decoded_date = hashids.decode(req.params.date)[0];
+
+  pg.connect(database,function(dbErr,client,done){
+    if(dbErr){console.log(dbErr)}else{
+      async.waterfall([
+        function(callback){
+          client.query("SELECT sender_id,sender_email,body FROM echo.activity_logs WHERE datecode = $1 AND recipient_email = $2",[decoded_date,decoded_email],function(err,result){
+            if(err){callback(err)}{
+              callback(err,result.rows[0])
+            }
+          })
+        },
+        function(result,callback){
+          client.query("INSERT INTO echo.activity_logs (timestamp,datecode,sender_id,sender_email,body,recipient_email,action) VALUES (current_timestamp,$1,$2,$3,$4,$5,'open')",[decoded_date,result.sender_id,result.sender_email,result.body,decoded_email],function(dbErr){
+            callback(dbErr)
+          })
+        }
+      ],function(err){
+        if(err){console.log(err)}
+        res.sendFile(__dirname+'/pixel.png')
+      })
+    }
+  })
 })
 
 app.get('/',function(req,res){
-  if(req.session.userId){
+  if(req.session.user){
     res.send(template.expand({
       title:"Echo - Send Email",
       js:"/javascripts/send.js"
@@ -179,8 +199,8 @@ app.get('/',function(req,res){
 })
 
 app.get('/login', function(req,res){
-  if(req.session.userId){
-    res.redirect('/export')
+  if(req.session.user){
+    res.redirect('/')
   }else{
     if(req.session.loginFail){
       failMsg = true
@@ -197,8 +217,14 @@ app.post('/login', function(req,res){
       .then(function(user){
         admin.auth().createCustomToken(user.uid)
           .then(function(customToken){
-            req.session.userId=user.uid
-            res.redirect('/')
+            db.ref('/users/'+user.uid).once("value",function(snapshot){
+              req.session.user=snapshot.val()
+              req.session.user.id = user.uid
+              if(snapshot.val().tokens){
+                res.redirect('/#newUser')
+              }else{
+              }
+            })
           })
           .catch(function(error){
             console.log("Error creating custom token:", error);
@@ -228,11 +254,11 @@ app.get('/error',function(req,res){
 })
 
 app.post('/send',function(req,res){
-  db.ref('/users/'+req.session.userId).once("value",function(snapshot){
+  db.ref('/users/'+req.session.user.id).once("value",function(snapshot){
     emailSend.send(snapshot.val(),arrayToObjects(parse.CSVToArray(req.body.recipients,"\t"),['email','name']).filter(function(d){return d.email!=""}),req.body.subject,req.body.body,function(emailErr,tokenError,newTokens){
       if(emailErr){console.log(emailErr)}
       if(tokenError){console.log(tokenError)}
-      db.ref('/users/'+req.session.userId+"/tokens").set(newTokens)
+      db.ref('/users/'+req.session.user.id+"/tokens").set(newTokens)
       res.redirect('/')
     })
   })
@@ -261,20 +287,20 @@ app.get('/gm/auth',function(req,res){
           },
           access_token:function(callback){
             if(tokens.access_token){
-              db.ref('/users/'+req.session.userId+"/tokens/access_token").set(tokens.access_token)
+              db.ref('/users/'+req.session.user.id+"/tokens/access_token").set(tokens.access_token)
               callback(null,tokens.access_token)
             }else{
-              db.ref('/users/'+req.session.userId).once("value",function(snapshot){
+              db.ref('/users/'+req.session.user.id).once("value",function(snapshot){
                 callback(null,snapshot.val().tokens.access_token)
               })
             }
           },
           refresh_token:function(callback){
             if(tokens.refresh_token){
-              db.ref('/users/'+req.session.userId+"/tokens/refresh_token").set(tokens.refresh_token)
+              db.ref('/users/'+req.session.user.id+"/tokens/refresh_token").set(tokens.refresh_token)
               callback(null,tokens.refresh_token)
             }else{
-              db.ref('/users/'+req.session.userId).once("value",function(snapshot){
+              db.ref('/users/'+req.session.user.id).once("value",function(snapshot){
                 callback(null,snapshot.val().tokens.refresh_token)
               })
             }
