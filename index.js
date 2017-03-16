@@ -259,12 +259,16 @@ app.get('/error',function(req,res){
 })
 
 app.post('/send',function(req,res){
-    emailSend.send(req.session.user,arrayToObjects(parse.CSVToArray(req.body.recipients,"\t"),['email','name']).filter(function(d){return d.email!=""}),req.body.subject,req.body.body,function(emailErr,tokenError,newTokens){
+  db.ref('/users/'+req.session.user.id).once("value",function(snapshot){
+    var user = snapshot.val()
+    user.id = req.session.user.id
+    emailSend.send(user,arrayToObjects(parse.CSVToArray(req.body.recipients,"\t"),['email','name']).filter(function(d){return d.email!=""}),req.body.subject,req.body.body,function(emailErr,tokenError,newTokens){
       if(emailErr){console.log(emailErr)}
       if(tokenError){console.log(tokenError)}
       db.ref('/users/'+req.session.user.id+"/tokens").set(newTokens)
       res.redirect('/')
     })
+  })
 })
 
 app.get('/gm/auth/url',function(req,res){
