@@ -16,6 +16,9 @@ var express = require('express'),
     redis = require('redis'),
     redisStore = require('connect-redis')(session),
     kue = require('kue'),
+    queue = kue.createQueue(
+      {redis:process.env.REDISTOGO_URL}
+    )
     bcrypt = require('bcrypt-nodejs'),
     config     = require('./config'),
     async      = require('async'),
@@ -38,18 +41,8 @@ if (process.env.REDISTOGO_URL) {
     var redClient = redis.createClient(rtg.port, rtg.hostname);
     redClient.auth(rtg.auth.split(":")[1]);
 
-    queue = kue.createQueue(
-      {redis:process.env.REDISTOGO_URL}
-    )
 } else {
       var redClient = redis.createClient();
-
-      queue = kue.createQueue(
-        {redis:{
-          port:6379,
-          host:"127.0.0.1"
-        }}
-      )
 }
 
 admin.initializeApp({
