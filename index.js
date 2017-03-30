@@ -180,9 +180,13 @@ app.get('/track/:email/:date/pixel.png',function(req,res){
           })
         },
         function(result,callback){
-          client.query("INSERT INTO echo.activity_logs (timestamp,datecode,sender_id,sender_email,body,recipient_email,action) VALUES (current_timestamp,$1,$2,$3,$4,$5,'open')",[decoded_date,result.sender_id,result.sender_email,result.body,decoded_email],function(dbErr){
-            callback(dbErr)
-          })
+          if(result.rows){
+            client.query("INSERT INTO echo.activity_logs (timestamp,datecode,sender_id,sender_email,body,recipient_email,action) VALUES (current_timestamp,$1,$2,$3,$4,$5,'open')",[decoded_date,result.sender_id,result.sender_email,result.body,decoded_email],function(dbErr){
+              callback(dbErr)
+            })
+          }else{
+            console.log("WARNING - No sender ID for open")
+          }
         }
       ],function(err){
         if(err){console.log(err)}
