@@ -33,14 +33,19 @@ var transporter = nodemailer.createTransport({
   }
 });
 
-exports.send = function(user,recip,subj,body,callback){
+exports.send = function(user,recip,mergeFields,subj,body,callback){
   var errorCount = 0,
       sendCount = 0;
 
   async.eachLimit(recip,1,function(d,callback){
     var emailTrack = hashids.encodeHex(Buffer(d.email).toString('hex')),
         uncodedDate = dateformat(Date.now(),"yyyymmddHHMM"),
-        dateTrack = hashids.encode(uncodedDate)
+        dateTrack = hashids.encode(uncodedDate),
+        uniqueBody = body
+
+    mergeFields.forEach(function(merge){
+      uniqueBody = uniqueBody.replace(merge.merge,d[merge.key])
+    })
 
     async.series([
       function(seriesCb){
@@ -48,7 +53,7 @@ exports.send = function(user,recip,subj,body,callback){
           from:user.email,
           to:d.email,
           subject:subj,
-          html:body.replace("|*NAME*|",d.name)+'<img src="http://echo-email.herokuapp.com/track/'+emailTrack+'/'+dateTrack+'/pixel.png">',
+          html:uniqueBody+'<br><br><img src="http://echo-email.herokuapp.com/track/'+emailTrack+'/'+dateTrack+'/pixel.png">',
           auth:{
             user:user.email,
             refreshToken:user.tokens.refresh_token,

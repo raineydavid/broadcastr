@@ -34,7 +34,8 @@
     "number-to-letter":"*",
     "pxl":"*",
     "dynamis":"*",
-    "pxl-for-emails":"*"
+    "pxl-for-emails":"*",
+    "kue":"*"
   },
   "engines": {
     "node": "6.x"

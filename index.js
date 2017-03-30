@@ -15,6 +15,7 @@ var express = require('express'),
     CronJob = require('cron').CronJob,
     redis = require('redis'),
     redisStore = require('connect-redis')(session),
+    kue = require('kue'),
     bcrypt = require('bcrypt-nodejs'),
     config     = require('./config'),
     async      = require('async'),
@@ -65,8 +66,19 @@ if (process.env.REDISTOGO_URL) {
     var rtg   = url.parse(process.env.REDISTOGO_URL);
     var redClient = redis.createClient(rtg.port, rtg.hostname);
     redClient.auth(rtg.auth.split(":")[1]);
+
+    queue = kue.createQueue(
+      {redis:process.env.REDISTOGO_URL}
+    )
 } else {
-    var redClient = redis.createClient();
+      var redClient = redis.createClient();
+
+      queue = kue.createQueue(
+        {redis:{
+          port:6379,
+          host:"127.0.0.1"
+        }}
+      )
 }
 
 var app = express();
@@ -191,17 +203,6 @@ app.get('/track/:email/:date/pixel.png',function(req,res){
   })
 })
 
-app.get('/',function(req,res){
-  if(req.session.user){
-    res.send(template.expand({
-      title:"Echo - Send Email",
-      js:"/javascripts/send.js"
-    }))
-  }else{
-    res.redirect('/login')
-  }
-})
-
 app.get('/login', function(req,res){
   if(req.session.user){
     res.redirect('/')
@@ -258,17 +259,115 @@ app.get('/error',function(req,res){
   }
 })
 
-app.post('/send',function(req,res){
-  db.ref('/users/'+req.session.user.id).once("value",function(snapshot){
-    var user = snapshot.val()
-    user.id = req.session.user.id
-    emailSend.send(user,arrayToObjects(parse.CSVToArray(req.body.recipients,"\t"),['email','name']).filter(function(d){return d.email!=""}),req.body.subject,req.body.body,function(emailErr,tokenError,newTokens){
-      if(emailErr){console.log(emailErr)}
-      if(tokenError){console.log(tokenError)}
-      db.ref('/users/'+req.session.user.id+"/tokens").set(newTokens)
-      res.redirect('/')
-    })
-  })
+app.get('/',function(req,res){
+  if(req.session.user){
+    res.send(template.expand({
+      title:"Echo - Home",
+      js:"/javascripts/home.js"
+    }))
+  }else{
+    res.redirect('/login')
+  }
+})
+
+app.get('/email/:page',function(req,res){
+  if(req.session.user){
+    switch(req.params.page){
+      case "send":
+        res.send(template.expand({
+          title:"Echo - Send Email",
+          js:"/javascripts/email/send.js"
+        }))
+      break;
+    }
+  }else{
+    res.redirect('/login')
+  }
+})
+
+app.post('/email/send',function(req,res){
+  switch(req.body.headerSelect){
+    case "default":
+      db.ref('/users/'+req.session.user.id).once("value",function(snapshot){
+        var user = snapshot.val()
+        user.id = req.session.user.id
+        queue.create('email',{
+          user:user,
+          recip:arrayToObjects(parse.CSVToArray(req.body.recipients,"\t"),['email','name']).filter(function(d){return d.email!=""}),
+            mergeFields:[{merge:"|*NAME*|",key:"name"},{merge:"|*EMAIL*|",key:"email"}],
+          subj:req.body.subject,
+          body:req.body.body,
+        }).save(function(err){
+          if(err){console.log(err)}
+          res.redirect('/email/send')
+        })
+      })
+    break;
+    case "custom":
+      db.ref('/users/'+req.session.user.id).once("value",function(snapshot){
+        var user = snapshot.val()
+        user.id = req.session.user.id
+        queue.create('email',{
+          user:user,
+          recip:arrayToObjects(parse.CSVToArray(req.body.recipients).slice(1),parse.CSVToArray(req.body.recipients)[0]).filter(function(d){return d.email!=""}),
+          mergeFields:parse.CSVToArray(req.body.recipients)[0].map(function(d){return {merge:"|*"+d.toUpperCase()+"*|",key:d}}),
+          subj:req.body.subject,
+          body:req.body.body,
+        }).save(function(err){
+          if(err){console.log(err)}
+          res.redirect('/email/send')
+        })
+      })
+    break;
+  }
+})
+
+app.get('/reports/:report',function(req,res){
+  if(req.session.user){
+    switch(req.params.report){
+      case "topline":
+        res.send(template.expand({
+          title:"Echo - Topline Report",
+          js:"/javascripts/reports/topline.js"
+        }))
+      break;
+    }
+  }else{
+    res.redirect('/login')
+  }
+})
+
+app.get('/settings/:page',function(req,res){
+  if(req.session.user){
+    switch(req.params.page){
+      case "me":
+        res.send(template.expand({
+          title:"Echo - My Account",
+          js:"/javascripts/settings/me.js"
+        }))
+      break;
+      case "users":
+        res.send(template.expand({
+          title:"Echo - Users",
+          js:"/javascripts/settings/users.js"
+        }))
+      break;
+      case "clients":
+        res.send(template.expand({
+          title:"Echo - Clients",
+          js:"/javascripts/settings/clients.js"
+        }))
+      break;
+      case "templates":
+        res.send(template.expand({
+          title:"Echo - Templates",
+          js:"/javascripts/settings/templates.js"
+        }))
+      break;
+    }
+  }else{
+    res.redirect('/login')
+  }
 })
 
 app.get('/gm/auth/url',function(req,res){
@@ -343,7 +442,87 @@ wss.on("connection",function(ws){
       ws.send(JSON.stringify({id:"pages",data:snapshot.val()}))
     })
     ws.on("message",function(d){
-
+      switch(JSON.parse(d).type){
+        case "email":
+          switch(JSON.parse(d).id){
+            case "templates":
+              db.ref('/templates').once('value',function(snapshot){
+                if(snapshot.val()){
+                  ws.send(JSON.stringify({id:"templates",data:{templates:snapshot.val().map(function(d){return snapshot.val()[d]})}}))
+                }else{
+                  ws.send(JSON.stringify({id:"templates",data:{templates:[]}}))
+                }
+              })
+            break;
+          }
+        break;
+        case "reports":
+          switch(JSON.parse(d).id){
+            case "topline":
+              pg.connect(database,function(err,client,done){
+                async.series({
+                  totals:function(callback){
+                    client.query("SELECT COUNT(DISTINCT datecode),COUNT(CASE WHEN action = 'send' THEN recipient_email ELSE null END) as sends,COUNT(DISTINCT CASE WHEN action = 'open' THEN recipient_email ELSE null END) as unique_opens,COUNT(DISTINCT CASE WHEN action = 'open' THEN recipient_email ELSE null END)::FLOAT/COUNT(CASE WHEN action = 'send' THEN recipient_email ELSE null END) as unique_open_rate,COUNT(CASE WHEN action = 'open' THEN recipient_email ELSE null END) as opens FROM echo.activity_logs WHERE sender_id = $1",[req.session.user.id],function(err,result){
+                      if(result){
+                        callback(err,result.rows)
+                      }else{
+                        callback(err)
+                      }
+                    })
+                  },
+                  timeSeries:function(callback){
+                    client.query("select (substring(datecode from 5 for 2)||'/'||substring(datecode from 7 for 2)||'/'||substring(datecode from 1 for 4)) as send_date,COUNT(CASE WHEN action = 'send' THEN recipient_email ELSE null END) as sends,COUNT(DISTINCT CASE WHEN action = 'open' THEN recipient_email ELSE null END) as unique_opens,COUNT(CASE WHEN action = 'open' THEN recipient_email ELSE null END) as opens FROM echo.activity_logs WHERE sender_id = $1 GROUP BY send_date",[req.session.user.id],function(err,result){
+                      if(result){
+                        callback(err,result.rows)
+                      }else{
+                        callback(err)
+                      }
+                    })
+                  }
+                },function(err,data){
+                  ws.send(JSON.stringify({id:"data",data:data}))
+                })
+              })
+            break;
+          }
+        break;
+        case "settings":
+          switch(JSON.parse(d).id){
+            case "me":
+              db.ref('/users'+req.session.user.id).once('value',function(snapshot){
+                ws.send(JSON.stringify({id:"data",data:snapshot.val()}))
+              })
+            break;
+            case "users":
+              db.ref('/users').once('value',function(snapshot){
+                if(snapshot.val()){
+                  ws.send(JSON.stringify({id:"data",data:objectToArray(snapshot.val())}))
+                }else{
+                  ws.send(JSON.stringify({id:"data",data:[]}))
+                }
+              })
+            break;
+            case "clients":
+              db.ref('/clients').once('value',function(snapshot){
+                if(snapshot.val()){
+                  ws.send(JSON.stringify({id:"data",data:objectToArray(snapshot.val())}))
+                }else{
+                  ws.send(JSON.stringify({id:"data",data:[]}))
+                }
+              })
+            break;
+            case "templates":
+              db.ref('/templates').once('value',function(snapshot){
+                if(snapshot.val()){
+                  ws.send(JSON.stringify({id:"data",data:objectToArray(snapshot.val())}))
+                }else{
+                  ws.send(JSON.stringify({id:"data",data:[]}))
+                }
+              })
+            break;
+          }
+        break;
+      }
     })
 
   ws.on("close", function() {
