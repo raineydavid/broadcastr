@@ -18,7 +18,7 @@ var express = require('express'),
     kue = require('kue'),
     queue = kue.createQueue(
       {redis:process.env.REDISTOGO_URL}
-    )
+    ),
     bcrypt = require('bcrypt-nodejs'),
     config     = require('./config'),
     async      = require('async'),
