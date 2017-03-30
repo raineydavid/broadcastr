@@ -86,7 +86,7 @@ pg.connect(database,function(err,client,done){
           },
         ],function(emailErr){
           if(emailErr){console.log(emailErr)}
-          callback(emailErr)
+          setTimeout(function(){callback(emailErr)},1000)
         })
 
       },function(emailErr){
