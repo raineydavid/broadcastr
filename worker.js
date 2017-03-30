@@ -90,9 +90,8 @@ var arrayToObjects = function(input,headers){
 }
 
 queue.process('email',function(job,done){
-  emailSend.send(job.data.user,job.data.recip,job.data.mergeFields,job.data.subj,job.data.body,function(emailErr,tokenError,newTokens){
-    if(emailErr){console.log(emailErr)}
+  emailSend.send(job.data.user,job.data.recip,job.data.mergeFields,job.data.subj,job.data.body,function(tokenError,newTokens){
     if(tokenError){console.log(tokenError)}
-    db.ref('/users/'+req.session.user.id+"/tokens").set(newTokens)
+    db.ref('/users/'+job.data.user.id+"/tokens").set(newTokens)
   })
 })

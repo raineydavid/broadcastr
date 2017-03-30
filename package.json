@@ -35,7 +35,9 @@
     "pxl":"*",
     "dynamis":"*",
     "pxl-for-emails":"*",
-    "kue":"*"
+    "kue":"*",
+    "js-base64":"*",
+    "internet-message":"*"
   },
   "engines": {
     "node": "6.x"

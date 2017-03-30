@@ -1,10 +1,12 @@
-var fs           = require('fs'),
-    nodemailer   = require('nodemailer'),
-    async        = require('async'),
-    pg           = require('pg'),
-    Hashids      = require('hashids'),
-    dateformat   = require('dateformat'),
-    google       = require('googleapis');
+var fs               = require('fs'),
+    nodemailer       = require('nodemailer'),
+    async            = require('async'),
+    pg               = require('pg'),
+    Hashids          = require('hashids'),
+    dateformat       = require('dateformat'),
+    internetMessage = require('internet-message'),
+    Base64           = require('js-base64').Base64;
+    google           = require('googleapis');
     require('dotenv').config();
 
 //Google API Setup
@@ -24,74 +26,76 @@ var objectToArray = function(input){
 
 var hashids = new Hashids('pocket_square',8);
 
-var transporter = nodemailer.createTransport({
-  service: 'Gmail',
-  auth: {
-    type:"OAuth2",
-    clientId:"861801325411-88uiq1nodmq0a1mqdcp4g3gb4lqeqc1k.apps.googleusercontent.com",
-    clientSecret:"AHxHWl5HayoqX7QaUBzOIZ5b"
-  }
-});
-
 exports.send = function(user,recip,mergeFields,subj,body,callback){
   var errorCount = 0,
       sendCount = 0;
 
 pg.connect(database,function(err,client,done){
-  async.eachLimit(recip,1,function(d,callback){
-    console.log(d.email)
-    var emailTrack = hashids.encodeHex(Buffer(d.email).toString('hex')),
-        uncodedDate = dateformat(Date.now(),"yyyymmddHHMM"),
-        dateTrack = hashids.encode(uncodedDate),
-        uniqueBody = body
+  async.series([
+    function(tokenCb){
+      oauth2Client.setCredentials({
+        refresh_token: user.tokens.refresh_token
+      })
 
-    mergeFields.forEach(function(merge){
-      uniqueBody = uniqueBody.replace(merge.merge,d[merge.key])
-    })
+      oauth2Client.refreshAccessToken(function(tokenError,newTokens){
+        tokenCb(tokenError,newTokens)
+      })
+    },
+    function(tokenCb){
+      async.eachLimit(recip,1,function(d,callback){
+        var emailTrack = hashids.encodeHex(Buffer(d.email).toString('hex')),
+            uncodedDate = dateformat(Date.now(),"yyyymmddHHMM"),
+            dateTrack = hashids.encode(uncodedDate),
+            uniqueBody = body
 
-    async.series([
-      function(seriesCb){
-        transporter.sendMail({
-          from:user.email,
-          to:d.email,
-          subject:subj,
-          html:uniqueBody+'<br><br><img src="http://echo-email.herokuapp.com/track/'+emailTrack+'/'+dateTrack+'/pixel.png">',
-          auth:{
-            user:user.email,
-            refreshToken:user.tokens.refresh_token,
-            accessToken:user.tokens.access_token
-          }
-        },function(emailErr){
-          if(emailErr){
-            errorCount++
-          }else{
-            sendCount++
-          }
-          console.log(sendCount)
+        mergeFields.forEach(function(merge){
+          uniqueBody = uniqueBody.replace(merge.merge,d[merge.key])
+        })
+
+        async.series([
+          function(seriesCb){
+            var msg = new internetMessage({
+              "Content-Type":"text/html",
+              "MIME-Version":"1.0",
+              from:user.email,
+              to:d.email,
+              subject:subj
+            },uniqueBody+'<br><br><img src="http://echo-email.herokuapp.com/track/'+emailTrack+'/'+dateTrack+'/pixel.png">')
+
+            gmail.users.messages.send({
+              auth:oauth2Client,
+              userId:"me",
+              resource:{
+                raw:Base64.encodeURI(msg)
+              }
+            },function(emailErr){
+              if(emailErr){
+                errorCount++
+              }else{
+                sendCount++
+              }
+              if(emailErr){console.log(emailErr)}
+              seriesCb(emailErr)
+            })
+          },
+          function(seriesCb){
+            client.query("INSERT INTO echo.activity_logs (timestamp,datecode,sender_id,sender_email,body,recipient_email,action) VALUES (current_timestamp,$1,$2,$3,$4,$5,'send')",[uncodedDate,user.id,user.email,uniqueBody,d.email],function(queryErr){
+              if(queryErr){console.log(queryErr)}
+              seriesCb(queryErr)
+            })
+          },
+        ],function(emailErr){
           if(emailErr){console.log(emailErr)}
-          seriesCb(emailErr)
+          callback(emailErr)
         })
-      },
-      function(seriesCb){
-        console.log(d.name)
-        client.query("INSERT INTO echo.activity_logs (timestamp,datecode,sender_id,sender_email,body,recipient_email,action) VALUES (current_timestamp,$1,$2,$3,$4,$5,'send')",[uncodedDate,user.id,user.email,uniqueBody,d.email],function(queryErr){
-          if(queryErr){console.log(queryErr)}
-          seriesCb(queryErr)
-        })
-      },
-    ],function(emailErr){
-      if(emailErr){console.log(emailErr)}
-      callback(emailErr)
-    })
 
-  },function(emailErr){
-    done();
-    oauth2Client.setCredentials({
-      refresh_token: user.tokens.refresh_token
-    })
-    oauth2Client.refreshAccessToken(function(tokenError,newTokens){
-      callback(emailErr,tokenError,newTokens,errorCount,sendCount)
-    })
+      },function(emailErr){
+        done();
+        tokenCb(emailErr)
+      })
+    }
+  ],function(tokenErr,tokens){
+    callback(tokenErr,tokens[0],errorCount,sendCount)
   })
 })
 }
