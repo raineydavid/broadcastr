@@ -37,6 +37,7 @@ exports.send = function(user,recip,mergeFields,subj,body,callback){
   var errorCount = 0,
       sendCount = 0;
 
+pg.connect(database,function(err,client,done){
   async.eachLimit(recip,1,function(d,callback){
     console.log(d.email)
     var emailTrack = hashids.encodeHex(Buffer(d.email).toString('hex')),
@@ -72,13 +73,10 @@ exports.send = function(user,recip,mergeFields,subj,body,callback){
         })
       },
       function(seriesCb){
-        pg.connect(database,function(dbErr,client,done){
-          if(dbErr){seriesCb(dbErr)}else{
-            console.log(d.name)
-            client.query("INSERT INTO echo.activity_logs (timestamp,datecode,sender_id,sender_email,body,recipient_email,action) VALUES (current_timestamp,$1,$2,$3,$4,$5,'send')",[uncodedDate,user.id,user.email,uniqueBody,d.email],function(queryErr){
-              seriesCb(queryErr)
-            })
-          }
+        console.log(d.name)
+        client.query("INSERT INTO echo.activity_logs (timestamp,datecode,sender_id,sender_email,body,recipient_email,action) VALUES (current_timestamp,$1,$2,$3,$4,$5,'send')",[uncodedDate,user.id,user.email,uniqueBody,d.email],function(queryErr){
+          if(queryErr){console.log(queryErr)}
+          seriesCb(queryErr)
         })
       },
     ],function(emailErr){
@@ -87,6 +85,7 @@ exports.send = function(user,recip,mergeFields,subj,body,callback){
     })
 
   },function(emailErr){
+    done();
     oauth2Client.setCredentials({
       refresh_token: user.tokens.refresh_token
     })
@@ -94,4 +93,5 @@ exports.send = function(user,recip,mergeFields,subj,body,callback){
       callback(emailErr,tokenError,newTokens,errorCount,sendCount)
     })
   })
+})
 }
