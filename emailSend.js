@@ -38,6 +38,7 @@ exports.send = function(user,recip,mergeFields,subj,body,callback){
       sendCount = 0;
 
   async.eachLimit(recip,1,function(d,callback){
+    console.log(d.email)
     var emailTrack = hashids.encodeHex(Buffer(d.email).toString('hex')),
         uncodedDate = dateformat(Date.now(),"yyyymmddHHMM"),
         dateTrack = hashids.encode(uncodedDate),
@@ -65,19 +66,23 @@ exports.send = function(user,recip,mergeFields,subj,body,callback){
           }else{
             sendCount++
           }
+          console.log(sendCount)
+          if(emailErr){console.log(emailErr)}
           seriesCb(emailErr)
         })
       },
       function(seriesCb){
         pg.connect(database,function(dbErr,client,done){
           if(dbErr){seriesCb(dbErr)}else{
-            client.query("INSERT INTO echo.activity_logs (timestamp,datecode,sender_id,sender_email,body,recipient_email,action) VALUES (current_timestamp,$1,$2,$3,$4,$5,'send')",[uncodedDate,user.id,user.email,body.replace("|*NAME*|",d.name),d.email],function(queryErr){
+            console.log(d.name)
+            client.query("INSERT INTO echo.activity_logs (timestamp,datecode,sender_id,sender_email,body,recipient_email,action) VALUES (current_timestamp,$1,$2,$3,$4,$5,'send')",[uncodedDate,user.id,user.email,uniqueBody,d.email],function(queryErr){
               seriesCb(queryErr)
             })
           }
         })
       },
     ],function(emailErr){
+      if(emailErr){console.log(emailErr)}
       callback(emailErr)
     })
 
