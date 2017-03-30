@@ -28,7 +28,8 @@ var express = require('express'),
     google = require('googleapis'),
     ntl = require('number-to-letter'),
     pxl = require('pxl'),
-    sheetExport = require('./sheetExport');
+    emailSend = require('./emailSend'),
+    serviceAccount = require("./echo-email-7c3f6c3d45e1.json"),
     error = require('./error');
     require('dotenv').config();
 
@@ -50,6 +51,56 @@ if (process.env.REDISTOGO_URL) {
         }}
       )
 }
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://echo-email.firebaseio.com/"
+});
+
+var config = {
+    apiKey: "AIzaSyDn8zb14rRlQBcx74zdgXqSqoEbl-hYQJ4",
+    authDomain: "echo-email.firebaseapp.com",
+    databaseURL: "https://echo-email.firebaseio.com",
+    storageBucket: "echo-email.appspot.com",
+    messagingSenderId: "861801325411"
+  };
+firebase.initializeApp(config);
+
+var db = admin.database(),
+    root = db.ref(),
+    queue = db.ref('/queue'),
+    options = {endpoint: "jobs"},
+    cron = new fbCron(root,queue,options);
+
+//Google API Setup
+var OAuth2 = google.auth.OAuth2,
+    oauth2Client = new OAuth2('861801325411-88uiq1nodmq0a1mqdcp4g3gb4lqeqc1k.apps.googleusercontent.com','AHxHWl5HayoqX7QaUBzOIZ5b',process.env.GOOGLE_OAUTH_CALLBACK),
+    gmail = google.gmail('v1');
+
+google.options({auth: oauth2Client})
+
+var objectToArray = function(input){
+    return Object.keys(input).map(function(d){
+      return input[d]
+    })
+}
+
+var arrayToObjects = function(input,headers){
+  var array = new Array
+  input.forEach(function(row){
+    var output = new Object
+
+    row.forEach(function(col,i){
+      output[headers[i]] = col
+    })
+
+    array.push(output)
+  })
+  return array
+}
+
+app.use(express.static(__dirname + '/public'));
+
 
 queue.process('email',function(job,done){
   console.log(job)
