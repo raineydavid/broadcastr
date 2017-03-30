@@ -99,9 +99,6 @@ var arrayToObjects = function(input,headers){
   return array
 }
 
-app.use(express.static(__dirname + '/public'));
-
-
 queue.process('email',function(job,done){
   console.log(job)
   emailSend.send(job.user,job.recip,job.mergeFields,job.subj,job.body,function(emailErr,tokenError,newTokens){
