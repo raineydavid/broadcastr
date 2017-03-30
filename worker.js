@@ -59,6 +59,9 @@ var config = {
   };
 firebase.initializeApp(config);
 
+var db = admin.database(),
+    root = db.ref()
+
 //Google API Setup
 var OAuth2 = google.auth.OAuth2,
     oauth2Client = new OAuth2('861801325411-88uiq1nodmq0a1mqdcp4g3gb4lqeqc1k.apps.googleusercontent.com','AHxHWl5HayoqX7QaUBzOIZ5b',process.env.GOOGLE_OAUTH_CALLBACK),
@@ -87,8 +90,7 @@ var arrayToObjects = function(input,headers){
 }
 
 queue.process('email',function(job,done){
-  console.log(job)
-  emailSend.send(job.user,job.recip,job.mergeFields,job.subj,job.body,function(emailErr,tokenError,newTokens){
+  emailSend.send(job.data.user,job.data.recip,job.data.mergeFields,job.data.subj,job.data.body,function(emailErr,tokenError,newTokens){
     if(emailErr){console.log(emailErr)}
     if(tokenError){console.log(tokenError)}
     db.ref('/users/'+req.session.user.id+"/tokens").set(newTokens)
