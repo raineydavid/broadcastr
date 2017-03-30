@@ -59,12 +59,6 @@ var config = {
   };
 firebase.initializeApp(config);
 
-var db = admin.database(),
-    root = db.ref(),
-    queue = db.ref('/queue'),
-    options = {endpoint: "jobs"},
-    cron = new fbCron(root,queue,options);
-
 //Google API Setup
 var OAuth2 = google.auth.OAuth2,
     oauth2Client = new OAuth2('861801325411-88uiq1nodmq0a1mqdcp4g3gb4lqeqc1k.apps.googleusercontent.com','AHxHWl5HayoqX7QaUBzOIZ5b',process.env.GOOGLE_OAUTH_CALLBACK),
