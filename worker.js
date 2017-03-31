@@ -93,5 +93,6 @@ queue.process('email',function(job,done){
   emailSend.send(job.data.user,job.data.recip,job.data.mergeFields,job.data.subj,job.data.body,function(tokenError,newTokens){
     if(tokenError){console.log(tokenError)}
     db.ref('/users/'+job.data.user.id+"/tokens").set(newTokens)
+    done()
   })
 })

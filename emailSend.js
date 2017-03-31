@@ -31,7 +31,6 @@ exports.send = function(user,recip,mergeFields,subj,body,callback){
       sendCount = 0;
 
 pg.connect(database,function(err,client,done){
-  console.log(recip)
   async.series([
     function(tokenCb){
       oauth2Client.setCredentials({
