@@ -557,9 +557,13 @@ ws.onmessage = function(event){
       });
 
     $('.bootstrap-wysihtml5-insert-link-modal').on("shown.bs.modal",function(){
-      d3.select(".bootstrap-wysihtml5-insert-link-modal").select(".modal-dialog").select(".modal-content").select(".modal-body").append("div")
-        .attr("class","col-xs-12 alert alert-danger")
-        .text("Links must start with https://www. to be valid. Do not include any link sourcing, it will automatically be added to your URL.")
+      if(d3.select(".bootstrap-wysihtml5-insert-link-modal").select(".modal-dialog").select(".modal-content").select(".modal-body").select(".alert")){
+
+      }else{
+        d3.select(".bootstrap-wysihtml5-insert-link-modal").select(".modal-dialog").select(".modal-content").select(".modal-body").append("div")
+          .attr("class","col-xs-12 alert alert-danger")
+          .text("Links must start with https://www. to be valid. Do not include any link sourcing, it will automatically be added to your URL.")
+      }
     })
 
     break;
