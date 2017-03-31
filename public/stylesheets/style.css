@@ -208,7 +208,7 @@ footer>div>img{
 }
 
 .glyph-button{
-  cursor:pointer;
+    cursor:pointer;
   -webkit-appearance: none;
   outline: none;
   border: 0;
