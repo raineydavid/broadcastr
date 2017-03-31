@@ -60,7 +60,13 @@ pg.connect(database,function(err,client,done){
               from:user.email,
               to:d.email,
               subject:subj
-            },uniqueBody+'<br><br><img src="http://echo-email.herokuapp.com/track/'+emailTrack+'/'+dateTrack+'/pixel.png">')
+            },uniqueBody.replace(/href="([^\'\"]+)/gi,function(match,a,b,c){
+              return match + "?utm_medium=email&utm_source=echo&utm_term="+emailTrack+"_"+dateTrack
+            })+'<br><br><img src="http://echo-email.herokuapp.com/track/'+emailTrack+'/'+dateTrack+'/pixel.png">')
+
+            console.log(uniqueBody.replace(/href="([^\'\"]+)/gi,function(match,a,b,c){
+              return match + "?utm_medium=email&utm_source=echo&utm_term="+emailTrack+"_"+dateTrack
+            })+'<br><br><img src="http://echo-email.herokuapp.com/track/'+emailTrack+'/'+dateTrack+'/pixel.png">')
 
             gmail.users.messages.send({
               auth:oauth2Client,

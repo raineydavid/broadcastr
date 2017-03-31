@@ -186,6 +186,7 @@ app.get('/track/:email/:date/pixel.png',function(req,res){
             })
           }else{
             console.log("WARNING - No sender ID for open")
+            callback()
           }
         }
       ],function(err){
@@ -496,12 +497,10 @@ wss.on("connection",function(ws){
               })
             break;
             case "clients":
-              db.ref('/clients').once('value',function(snapshot){
-                if(snapshot.val()){
-                  ws.send(JSON.stringify({id:"data",data:objectToArray(snapshot.val())}))
-                }else{
-                  ws.send(JSON.stringify({id:"data",data:[]}))
-                }
+              pg.connect(database,function(err,client,done){
+                client.query("SELECT * FROM echo.clients",function(err,clients){
+                  ws.send(JSON.stringify({id:"data",data:clients.rows}))
+                })
               })
             break;
             case "templates":

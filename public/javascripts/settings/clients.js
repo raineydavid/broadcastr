@@ -1,4 +1,4 @@
-var thisPage = '/settings/users'
+var thisPage = '/settings/clients'
 
 var getUrlParameter = function getUrlParameter(path,sParam) {
     var sPageURL = path,
@@ -93,83 +93,51 @@ ws.onopen = function(event){
       .text("Close")
 
   ws.onmessage = function (event) {
-    switch(JSON.parse(event.data).type){
+    var dataId = JSON.parse(event.data).id
+    var data = JSON.parse(event.data).data
+    switch(dataId){
       case "navBar":
-        data = JSON.parse(event.data).data
         console.log(data)
         navBar(d3.select("body"),data,function(done){
           console.log("done")
-          ws.send(JSON.stringify({type:"settings",id:"users"}))
+          ws.send(JSON.stringify({type:"settings",id:"clients"}))
         })
       break;
       case "pageData":
-         data = JSON.parse(event.data).data
-
         console.log(data)
 
-        var userTabs = [{
-            name:"Active Users",
-            link:"activeUsers",
+        var clientTabs = [{
+            name:"Active Clients",
+            link:"activeClients",
             type:"table",
             filter:false,
             class:"accentGreen-500"
           },{
-            name:"Inactive Users",
-            link:"inactiveUsers",
+            name:"Inactive Clients",
+            link:"inactiveClients",
             type:"table",
             filter:true,
             class:"accentRed-500"
           },{
-            name:"New User",
-            link:"newUser",
+            name:"New Client",
+            link:"newClient",
             type:"form",
-            action:"/settings/users/add",
+            action:"/settings/clients/add",
             class:"logoLightBlue-500",
             fields:[
               {
-                name:"fname",
-                label:"First Name",
+                name:"client_name",
+                label:"Client Name",
                 element:"input",
                 type:"text",
                 class:"col-xs-4 form-group",
                 elementClass:"form-control"
               },
               {
-                name:"lname",
-                label:"Last Name",
-                element:"input",
-                type:"text",
-                class:"col-xs-4 form-group",
-                elementClass:"form-control"
-              },
-              {
-                name:"email",
-                label:"Email",
-                element:"input",
-                type:"text",
-                class:"col-xs-4 form-group",
-                elementClass:"form-control"
-              },
-              {
-                name:"access",
-                label:"Access Level",
+                name:"twoseventyLead",
+                label:"270 Lead",
                 element:"select",
-                options:"access",
-                class:"col-xs-4 form-group",
-                elementClass:"form-control",
-                onChange:function(d){
-                  if(d==="admin-270"){
-                    d3.select("#client").style("visibility","hidden")
-                  }else{
-                    d3.select("#client").style("visibility","show")
-                  }
-                }
-              },
-              {
-                name:"client",
-                label:"Client",
-                element:"select",
-                options:"clients"
+                options:"twoseventy-users",
                 class:"col-xs-4 form-group",
                 elementClass:"form-control"
               },
@@ -182,48 +150,80 @@ ws.onopen = function(event){
                 elementClass:"btn btn-default logoLightBlue-500"
               }
             ]
-          }]
-
-        var userDisplay = [
+          }],
+        clientDisplay = [
           {
             name:"active",
             label:null,
             width: "2%"
           },
           {
-            name:"fname",
-            label:"First Name",
-            width: "10%"
+            name:"client_name",
+            label:"Client Name",
+            width: "40%"
           },
           {
-            name:"lname",
-            label:"Last Name",
-            width: "18%"
-          },
-          {
-            name:"email",
-            label:"Email",
-            width: "15%"
-          },
-          {
-            name:"access",
-            label:"Access Level",
-            width: "15%"
-          },
-          {
-            name:"client",
-            label:"Client",
-            width: "15%"
+            name:"twoseventyLead",
+            label:"270 Lead",
+            width: "28%"
           },
           {
             name:"created_at",
             label:"Created At",
-            width: "10%"
+            width: "15%"
           },{
             name:"created_by",
             label:"Created By",
             width: "15%"
-          }]
+          }],
+        clientModal = [
+          {
+            name:"client_name",
+            element:"input",
+            type:"text",
+            class:"form-group col-md-6",
+            elementClass:"form-control"
+          },
+          {
+            name:"twoseventyLead",
+            element:"select",
+            options:"users",
+            class:"form-group col-md-6",
+            elementClass:"form-control"
+          },
+          {
+            name:"users",
+            element:"table",
+            class:"table-responsive",
+            elementClass:"table-hover table-striped table-collapse",
+            headers:[
+              {
+                name:"active",
+                label:null,
+                width: "2%"
+              },
+              {
+                name:"full_name",
+                label:"Name",
+                width: "40%"
+              },
+              {
+                name:"email",
+                label:"Email",
+                width: "28%"
+              },
+              {
+                name:"added_at",
+                label:"Added At",
+                width: "15%"
+              },
+              {
+                name:"added_by",
+                label:"Added By",
+                width: "15%"
+              }]
+          }
+        ]
 
   var contentDiv = d3.select("body").append("div")
     .attr("class","container-fluid")
@@ -250,7 +250,7 @@ ws.onopen = function(event){
           .attr("data-toggle","pill")
           .text(function(d){return d.name})
 
-    var userDivs = contentDiv.append("div")
+    var clientDivs = contentDiv.append("div")
         .attr("class","tab-content").selectAll("div")
         .data(function(d,i){
           if(i===0){active = "active"}else{null}
@@ -265,7 +265,7 @@ ws.onopen = function(event){
             if(i===0){return "tab-pane active"}else{return "tab-pane"}
           })
 
-      userDivs.append("div")
+      clientDivs.append("div")
         .attr("class","row")
         .append("h3")
           .text(function(d){
@@ -275,14 +275,14 @@ ws.onopen = function(event){
             return d.class
           })
 
-    userTables = userDivs.filter(function(d){return d.type==="table"}).append("div")
+    clientTables = clientDivs.filter(function(d){return d.type==="table"}).append("div")
       .attr("class","table-responsive")
       .append("table")
         .attr("class","table table-striped table-hover table-users sortable")
 
-    userTables.append("thead").append("tr")
+    clientTables.append("thead").append("tr")
       .selectAll("th")
-      .data(userDisplay)
+      .data(clientDisplay)
       .enter().append("th")
       .text(function(d){
         return d.label
@@ -290,17 +290,17 @@ ws.onopen = function(event){
       .style("font-weight","bold")
       .style("text-align","left")
 
-    userTables.append("tbody")
+    clientTables.append("tbody")
       .selectAll("tr")
       .data(function(d){
-        return data.users.filter(function(a){
+        return data.clients.filter(function(a){
           return a.inactive === d.data.filter
         })
       })
       .enter().append("tr")
       .selectAll("td")
       .data(function(d){
-        return userDisplay.map(function(a){
+        return clientDisplay.map(function(a){
           return {row:{id:d.e_id},col:{name:a.name,width:a.width},val:{value:d[a.name]}}
         })
       })
@@ -354,7 +354,7 @@ ws.onopen = function(event){
           }
         })
 
-        var fields = userTables.filter(function(d){return d.type==="form"}).append("form")
+        var fields = clientTables.filter(function(d){return d.type==="form"}).append("form")
           .attr("class","form-inline")
           .attr("method","post")
           .attr("action",function(d){return d.action})
@@ -468,59 +468,59 @@ ws.onopen = function(event){
               tooltipHide()
             })
 
-$('#user').on('show.bs.modal', function (event) {
+$('#client').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget),
-      name = button.data('name'),
-      e_id = button.data('e_id');
+      client_name = button.data('client_name'),
+      client_id = button.data('client_id');
 
-  userModalHeader.text(function(d){
+  clientModalHeader.text(function(d){
       return name
     })
 
-  var userData = data["users"].filter(function(d){
-    return d.e_id === e_id
+  var clientData = data["clients"].filter(function(d){
+    return d.client_id === client_id
   })[0]
 
-  userModalBody.selectAll("*").remove()
+  clientModalBody.selectAll("*").remove()
 
-  var userContent = userModalBody.append("div")
+  var clientContent = clientModalBody.append("div")
 
-  var userInfoDiv = userContent.append("div")
+  var clientInfoDiv = clientContent.append("div")
     .attr("class","row")
     .append("div")
       .attr("class","col-md-12")
 
-  userInfoDiv.append("div")
+  clientInfoDiv.append("div")
     .attr("class","row")
     .append("div")
       .attr("class","col-md-12")
     .append("h3")
-      .text("User Info")
+      .text("Client Info")
       .style("font-size","18px")
       .style("margin-top","5px")
 
-  var userInfoForm = userInfoDiv.append("form")
+  var clientInfoForm = clientInfoDiv.append("form")
     .attr("class","form-inline col-md-12")
-    .attr("id","userInfoForm")
+    .attr("id","clientInfoForm")
     .attr("method","post")
-    .attr("action","/users/update?e_id="+encodeURIComponent(e_id))
+    .attr("action","/clients/update?client_id="+encodeURIComponent(e_id))
 
-    var topRow = userInfoForm.append("div")
+    var topRow = clientInfoForm.append("div")
       .attr("class","row")
 
-    var secondRow = userInfoForm.append("div")
+    var secondRow = clientInfoForm.append("div")
       .attr("class","row")
 
-    var middleRow = userInfoForm.append("div")
+    var middleRow = clientInfoForm.append("div")
       .attr("class","row")
 
-    var bottomRow = userInfoForm.append("div")
+    var bottomRow = clientInfoForm.append("div")
       .attr("class","row")
 
-    var buttonRow = userInfoForm.append("div")
+    var buttonRow = clientInfoForm.append("div")
       .attr("class","row")
 
-    userInfoForm.append("input")
+    clientInfoForm.append("input")
       .style("display","none")
       .attr("name","e_id")
       .attr("value",function(){

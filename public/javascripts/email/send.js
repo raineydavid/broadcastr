@@ -47,7 +47,7 @@ var insertAtCursor = function(myField, myValue) {
 
 //Page Setup
 
-var thisPage = '/',
+var thisPage = '/email/send',
     pageHeight = window.innerHeight,
     state = new Object,
     cols = [
@@ -266,7 +266,7 @@ var thisPage = '/',
           },
           {
             name:"sendButton",
-            label:"Submit",
+            label:"Send",
             element:"button",
             type:"submit",
             class:"col-md-1 buttonDiv bottomRow",
@@ -555,6 +555,12 @@ ws.onmessage = function(event){
            "blockquote": false, //Blockquote
            "size": 'xs' //default: none, other options are xs, sm, lg
       });
+
+    $('.bootstrap-wysihtml5-insert-link-modal').on("shown.bs.modal",function(){
+      d3.select(".bootstrap-wysihtml5-insert-link-modal").select(".modal-dialog").select(".modal-content").select(".modal-body").append("div")
+        .attr("class","col-xs-12 alert alert-danger")
+        .text("Links must start with https://www. to be valid. Do not include any link sourcing, it will automatically be added to your URL.")
+    })
 
     break;
   }
