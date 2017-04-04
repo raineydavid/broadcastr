@@ -537,6 +537,10 @@ ul.wysihtml5-toolbar a.btn.wysihtml5-command-active{
   font-size:12px;
 }
 
+.center{
+  margin:auto;
+}
+
 .open>a {
   outline:0
 }

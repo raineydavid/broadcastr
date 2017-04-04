@@ -455,20 +455,35 @@ wss.on("connection",function(ws){
             case "topline":
               pg.connect(database,function(err,client,done){
                 async.series({
+                  users:function(callback){
+                    client.query("SELECT distinct sender_id,sender_email FROM echo.activity_logs WHERE sender_id is not null",function(err,users){
+                      if(users){
+                        callback(err,users.rows)
+                      }else{
+                        console.log("WARNING - No users in topline report")
+                        console.log(err)
+                        callback(err)
+                      }
+                    })
+                  },
                   totals:function(callback){
-                    client.query("SELECT COUNT(DISTINCT datecode),COUNT(CASE WHEN action = 'send' THEN recipient_email ELSE null END) as sends,COUNT(DISTINCT CASE WHEN action = 'open' THEN recipient_email ELSE null END) as unique_opens,COUNT(DISTINCT CASE WHEN action = 'open' THEN recipient_email ELSE null END)::FLOAT/COUNT(CASE WHEN action = 'send' THEN recipient_email ELSE null END) as unique_open_rate,COUNT(CASE WHEN action = 'open' THEN recipient_email ELSE null END) as opens FROM echo.activity_logs WHERE sender_id = $1",[req.session.user.id],function(err,result){
+                    client.query("SELECT sender_id,COUNT(DISTINCT datecode) as \"Email Batches\",COUNT(CASE WHEN action = 'send' THEN recipient_email ELSE null END) as \"Emails Sent\",COUNT(DISTINCT CASE WHEN action = 'open' THEN recipient_email ELSE null END) as \"Unique Opens\",trunc(COUNT(DISTINCT CASE WHEN action = 'open' THEN recipient_email ELSE null END)::NUMERIC/COUNT(CASE WHEN action = 'send' THEN recipient_email ELSE null END)*100,1) ||'%' as \"Unique Open Rate\",COUNT(CASE WHEN action = 'open' THEN recipient_email ELSE null END) as \"Opens\" FROM echo.activity_logs GROUP BY sender_id",function(err,result){
                       if(result){
                         callback(err,result.rows)
                       }else{
+                        console.log("WARNING - No totals in topline report")
+                        console.log(err)
                         callback(err)
                       }
                     })
                   },
                   timeSeries:function(callback){
-                    client.query("select (substring(datecode from 5 for 2)||'/'||substring(datecode from 7 for 2)||'/'||substring(datecode from 1 for 4)) as send_date,COUNT(CASE WHEN action = 'send' THEN recipient_email ELSE null END) as sends,COUNT(DISTINCT CASE WHEN action = 'open' THEN recipient_email ELSE null END) as unique_opens,COUNT(CASE WHEN action = 'open' THEN recipient_email ELSE null END) as opens FROM echo.activity_logs WHERE sender_id = $1 GROUP BY send_date",[req.session.user.id],function(err,result){
+                    client.query("SELECT sender_id,(substring(datecode from 1 for 4)||'-'||substring(datecode from 5 for 2)||'-'||substring(datecode from 7 for 2)) as send_date,COUNT(CASE WHEN action = 'send' THEN recipient_email ELSE null END) as sends,COUNT(DISTINCT CASE WHEN action = 'open' THEN recipient_email ELSE null END) as unique_opens,COUNT(CASE WHEN action = 'open' THEN recipient_email ELSE null END) as opens FROM echo.activity_logs GROUP BY send_date,sender_id ORDER BY send_date",function(err,result){
                       if(result){
                         callback(err,result.rows)
                       }else{
+                        console.log("WARNING - No timeSeries in topline report")
+                        console.log(err)
                         callback(err)
                       }
                     })

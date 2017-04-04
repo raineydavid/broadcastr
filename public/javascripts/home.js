@@ -76,11 +76,10 @@ ws.onmessage = function(event){
         .attr("class","col-md-4")
 
       textCol.append("h3")
-        .text("Welcome to Cygnus")
+        .text("Welcome to Echo!")
 
       textCol.append("div")
         .attr("class","row col-xs-12")
-        .text("Cygnus is your one-stop place for 270's database management.")
 
       var menuCol = contentDiv.append("div")
         .attr("class",'col-md-8')
