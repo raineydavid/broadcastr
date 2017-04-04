@@ -33,24 +33,8 @@ var thisPage = '/reports/toplines',
     rows = [
       {
         name:"totals",
+        header:"User Toplines",
         cols:[
-          {
-            name:"toplines",
-            class:"col-md-4 col-md-offset-4 table-responsive",
-            element:"table",
-            elementClass:"table table-condensed table-hover center totalsTable",
-            dataKey:"totals",
-            tableTransform:function(raw){
-              var filterData = raw.filter(function(d){
-                return d.sender_id === state.sender_id
-              })[0]
-              return Object.keys(filterData).filter(function(d){
-                  return d!="sender_id"
-              }).map(function(d){
-                  return [{name:"header",val:d,width:"75%"},{name:"metric",val:filterData[d],width:"25%"}]
-              })
-            }
-          },
           {
             name:"sender_id",
             class:"col-md-2 form-group",
@@ -95,16 +79,6 @@ var thisPage = '/reports/toplines',
 
                   var rects = d3.select("#timeGraph").select("chart").select("svg").select("g").selectAll("rect")
                     .data(function(d){
-                      console.log(d.dataTransform(data[d.data]).map(function(bar){
-                        return {
-                          data:bar,
-                          x:d.x(data[d.data],d.staticWidth,d.xField)(d.xFormat(bar[d.xField])),
-                          y:d.y(data[d.data],state[d.yFilter],d.staticHeight)(parseFloat(bar[state[d.yFilter]])),
-                          height:d.staticHeight-d.y(data[d.data],state[d.yFilter],d.staticHeight)(parseFloat(bar[state[d.yFilter]])),
-                          width:d.x(data[d.data],d.staticWidth,d.xField).bandwidth(),
-                          tooltip:d.tooltip(bar,state[d.yFilter])
-                        }
-                      }))
                       return d.dataTransform(data[d.data]).map(function(bar){
                         return {
                           data:bar,
@@ -173,67 +147,30 @@ var thisPage = '/reports/toplines',
                         return d.y
                       })
             }
+          },
+          {
+            name:"toplines",
+            class:"col-md-4 col-md-offset-2 table-responsive",
+            element:"table",
+            elementClass:"table table-condensed table-hover center totalsTable",
+            dataKey:"totals",
+            tableTransform:function(raw){
+              var filterData = raw.filter(function(d){
+                return d.sender_id === state.sender_id
+              })[0]
+              return Object.keys(filterData).filter(function(d){
+                  return d!="sender_id"
+              }).map(function(d){
+                  return [{name:"header",val:d,width:"75%"},{name:"metric",val:filterData[d],width:"25%"}]
+              })
+            }
           }
         ]
       },
       {
         name:"timeSeries",
+        header:"Metrics by Day",
         cols:[
-          {
-            name:"timeGraph",
-            class:"col-md-8 col-md-offset-2 timeSeries",
-            element:"chart",
-            data:"timeSeries",
-            dataFilter:"sender_id",
-            yFilter:"metricDD",
-            xField:"send_date",
-            xFormat:function(d){
-              return toDate(d)
-            },
-            tooltip:function(d,metric){
-              return "<strong>Week:</strong> "+d.send_date+"<br><strong>"+metric+":</strong> "+d[metric]
-            },
-            margins:{
-              top:10,
-              right:20,
-              bottom:75,
-              left:60
-            },
-            width:function(){
-              return d3.select("#"+this.name).node().getBoundingClientRect().width
-            },
-            height:function(){
-              return window.innerHeight-d3.select("nav").node().getBoundingClientRect().height-d3.select("footer").node().getBoundingClientRect().height-d3.select("#contentDiv").node().getBoundingClientRect().height
-            },
-            x:function(domainData,staticWidth,xField){
-              return d3.scaleBand()
-                .rangeRound([0,staticWidth],.1)
-                .padding(.1)
-                .align(.1)
-                .domain(d3.timeDays(toDate(domainData[0][xField]),toDate(domainData[domainData.length-1][xField])))
-            },
-            xAxis:function(domainData,staticWidth,xField){
-              var x = this.x
-              return d3.axisBottom()
-                .scale(x(domainData,staticWidth,xField))
-                .ticks(10)
-                .tickFormat(d3.timeFormat('%m/%d/%y'))
-            },
-            y:function(domainData,val,staticHeight){
-              return d3.scaleLinear()
-                .rangeRound([staticHeight,0])
-                .domain([0,d3.max(domainData,function(d){return parseFloat(d[val])})])
-            },
-            yAxis:function(domainData,val,staticHeight){
-
-            },
-            dataTransform:function(raw){
-              dataFilter = this.dataFilter
-              return raw.filter(function(d){
-                return d[dataFilter] === state[dataFilter]
-              })
-            }
-          },
           {
             name:"metricDD",
             class:"col-md-2 form-group",
@@ -315,6 +252,61 @@ var thisPage = '/reports/toplines',
                     .attr("y",function(d){
                       return d.y
                     })
+            }
+          },
+          {
+            name:"timeGraph",
+            class:"col-md-8 timeSeries",
+            element:"chart",
+            data:"timeSeries",
+            dataFilter:"sender_id",
+            yFilter:"metricDD",
+            xField:"send_date",
+            xFormat:function(d){
+              return toDate(d)
+            },
+            tooltip:function(d,metric){
+              return "<strong>Week:</strong> "+d.send_date+"<br><strong>"+toTitleCase(metric.replace('_',' '))+":</strong> "+d[metric]
+            },
+            margins:{
+              top:10,
+              right:20,
+              bottom:75,
+              left:60
+            },
+            width:function(){
+              return d3.select("#"+this.name).node().getBoundingClientRect().width
+            },
+            height:function(){
+              return window.innerHeight-d3.select("nav").node().getBoundingClientRect().height-d3.select("footer").node().getBoundingClientRect().height-d3.select("#contentDiv").node().getBoundingClientRect().height
+            },
+            x:function(domainData,staticWidth,xField){
+              return d3.scaleBand()
+                .rangeRound([0,staticWidth],.1)
+                .padding(.1)
+                .align(.1)
+                .domain(d3.timeDays(toDate(domainData[0][xField]),toDate(domainData[domainData.length-1][xField])))
+            },
+            xAxis:function(domainData,staticWidth,xField){
+              var x = this.x
+              return d3.axisBottom()
+                .scale(x(domainData,staticWidth,xField))
+                .ticks(10)
+                .tickFormat(d3.timeFormat('%m/%d/%y'))
+            },
+            y:function(domainData,val,staticHeight){
+              return d3.scaleLinear()
+                .rangeRound([staticHeight,0])
+                .domain([0,d3.max(domainData,function(d){return parseFloat(d[val])})])
+            },
+            yAxis:function(domainData,val,staticHeight){
+
+            },
+            dataTransform:function(raw){
+              dataFilter = this.dataFilter
+              return raw.filter(function(d){
+                return d[dataFilter] === state[dataFilter]
+              })
             }
           }
         ]
@@ -445,8 +437,15 @@ ws.onmessage = function(event){
       var rowDivs = contentDiv.selectAll("div")
                     .data(rows)
                     .enter().append("div")
-                      .attr("class","row"),
-          colDivs = rowDivs.selectAll("div")
+                      .attr("class","row")
+
+          rowDivs.append("h4")
+            .text(function(d){
+              return d.header
+            })
+            .style("padding-left","15px")
+
+          var colDivs = rowDivs.selectAll("div")
                   .data(function(d){
                     return d.cols
                   })
