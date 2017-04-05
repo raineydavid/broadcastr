@@ -175,6 +175,7 @@ app.get('/track/:email/:date/pixel.png',function(req,res){
         function(callback){
           client.query("SELECT sender_id,sender_email,body FROM echo.activity_logs WHERE datecode = $1 AND recipient_email = $2",[decoded_date,decoded_email],function(err,result){
             if(err){callback(err)}{
+              console.log("INFO - Send/Recipient Data Found")
               callback(err,result.rows[0])
             }
           })
@@ -182,6 +183,7 @@ app.get('/track/:email/:date/pixel.png',function(req,res){
         function(result,callback){
           if(result){
             client.query("INSERT INTO echo.activity_logs (timestamp,datecode,sender_id,sender_email,body,recipient_email,action) VALUES (current_timestamp,$1,$2,$3,$4,$5,'open')",[decoded_date,result.sender_id,result.sender_email,result.body,decoded_email],function(dbErr){
+              console.log("INFO - Open Logged")
               callback(dbErr)
             })
           }else{
@@ -190,11 +192,16 @@ app.get('/track/:email/:date/pixel.png',function(req,res){
           }
         }
       ],function(err){
+        console.log("INFO - Pixel Sent")
         if(err){console.log(err)}
         res.sendFile(__dirname+'/pixel.png')
       })
     }
   })
+})
+
+app.get('/pixel.png',function(req,res){
+  res.sendFile(__dirname+'/pixel.png')
 })
 
 app.get('/login', function(req,res){

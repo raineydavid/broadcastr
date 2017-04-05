@@ -94,6 +94,6 @@ queue.process('email',function(job,done){
     if(tokenError){console.log(tokenError)}
     db.ref('/users/'+job.data.user.id+"/tokens").set(newTokens)
     done()
-    console.log(job.data.user + " - send done")
+    console.log(job.data.user.email + " - send done")
   })
 })

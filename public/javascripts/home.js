@@ -84,12 +84,11 @@ ws.onmessage = function(event){
       var menuCol = contentDiv.append("div")
         .attr("class",'col-md-8')
 
-      menuCol.selectAll("div")
+      menuCol.selectAll("a")
         .data(data.filter(function(d){
           return d.name!="Home" && d.name!="Logout"
         }))
-        .enter().append("div")
-        .append("a")
+        .enter().append("a")
           .attr("href",function(d){
             return d.html
           })
