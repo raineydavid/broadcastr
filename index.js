@@ -200,10 +200,6 @@ app.get('/track/:email/:date/pixel.png',function(req,res){
   })
 })
 
-app.get('/pixel.png',function(req,res){
-  res.sendFile(__dirname+'/pixel.png')
-})
-
 app.get('/login', function(req,res){
   if(req.session.user){
     res.redirect('/')
@@ -262,10 +258,13 @@ app.get('/error',function(req,res){
 
 app.get('/',function(req,res){
   if(req.session.user){
+    res.redirect('/email/send')
+    /*
     res.send(template.expand({
       title:"Echo - Home",
       js:"/javascripts/home.js"
     }))
+    */
   }else{
     res.redirect('/login')
   }
@@ -300,6 +299,7 @@ app.post('/email/send',function(req,res){
           body:req.body.body,
         }).save(function(err){
           if(err){console.log(err)}
+          console.log("INFO - Default Job Queued")
           res.redirect('/email/send')
         })
       })
@@ -316,6 +316,7 @@ app.post('/email/send',function(req,res){
           body:req.body.body,
         }).save(function(err){
           if(err){console.log(err)}
+          console.log("INFO - Custom Job Queued")
           res.redirect('/email/send')
         })
       })
@@ -389,15 +390,16 @@ app.get('/gm/auth',function(req,res){
         async.series({
           oauth:function(callback){
             oauth2Client.setCredentials(tokens)
-            console.log(tokens)
             callback()
           },
           access_token:function(callback){
             if(tokens.access_token){
               db.ref('/users/'+req.session.user.id+"/tokens/access_token").set(tokens.access_token)
+              console.log("INFO - OAuth Granted (Access Token)")
               callback(null,tokens.access_token)
             }else{
               db.ref('/users/'+req.session.user.id).once("value",function(snapshot){
+                console.log("INFO - Got Access Token From Firebase")
                 callback(null,snapshot.val().tokens.access_token)
               })
             }
@@ -405,9 +407,11 @@ app.get('/gm/auth',function(req,res){
           refresh_token:function(callback){
             if(tokens.refresh_token){
               db.ref('/users/'+req.session.user.id+"/tokens/refresh_token").set(tokens.refresh_token)
+              console.log("INFO - OAuth Granted (Refresh Token)")
               callback(null,tokens.refresh_token)
             }else{
               db.ref('/users/'+req.session.user.id).once("value",function(snapshot){
+                console.log("INFO - Got Refresh Token From Firebase")
                 callback(null,snapshot.val().tokens.refresh_token)
               })
             }
@@ -452,6 +456,7 @@ wss.on("connection",function(ws){
                   ws.send(JSON.stringify({id:"templates",data:{templates:snapshot.val().map(function(d){return snapshot.val()[d]})}}))
                 }else{
                   ws.send(JSON.stringify({id:"templates",data:{templates:[]}}))
+                  console.log("WARNING - No Templates (Email Send)")
                 }
               })
             break;
@@ -514,6 +519,7 @@ wss.on("connection",function(ws){
                 if(snapshot.val()){
                   ws.send(JSON.stringify({id:"data",data:objectToArray(snapshot.val())}))
                 }else{
+                  console.log("WARNING - No Users")
                   ws.send(JSON.stringify({id:"data",data:[]}))
                 }
               })
@@ -530,6 +536,7 @@ wss.on("connection",function(ws){
                 if(snapshot.val()){
                   ws.send(JSON.stringify({id:"data",data:objectToArray(snapshot.val())}))
                 }else{
+                  console.log("WARNING - No Templates (Settings)")
                   ws.send(JSON.stringify({id:"data",data:[]}))
                 }
               })

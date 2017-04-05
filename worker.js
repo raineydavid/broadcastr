@@ -90,10 +90,10 @@ var arrayToObjects = function(input,headers){
 }
 
 queue.process('email',function(job,done){
-  emailSend.send(job.data.user,job.data.recip,job.data.mergeFields,job.data.subj,job.data.body,function(tokenError,newTokens){
-    if(tokenError){console.log(tokenError)}
+  console.log("INFO - "+job.data.user.email + " Send Started")
+  emailSend.send(job.data.user,job.data.recip,job.data.mergeFields,job.data.subj,job.data.body,function(tokenError,newTokens){    if(tokenError){console.log(tokenError)}
     db.ref('/users/'+job.data.user.id+"/tokens").set(newTokens)
     done()
-    console.log(job.data.user.email + " - send done")
+    console.log("INFO - "+job.data.user.email + " Send Done")
   })
 })
