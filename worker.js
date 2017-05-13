@@ -31,9 +31,10 @@ var express = require('express'),
     google = require('googleapis'),
     ntl = require('number-to-letter'),
     pxl = require('pxl'),
-    emailSend = require('./emailSend'),
-    serviceAccount = require("./echo-email-7c3f6c3d45e1.json"),
-    error = require('./error');
+    emailSend = require('./scripts/emailSend'),
+    parse = require('./scripts/parse'),
+    error = require('./scripts/error'),
+    serviceAccount = require("./echo-email-7c3f6c3d45e1.json");
     require('dotenv').config();
 
 if (process.env.REDISTOGO_URL) {
@@ -91,7 +92,7 @@ var arrayToObjects = function(input,headers){
 
 queue.process('email',function(job,done){
   console.log("INFO - "+job.data.user.email + " Send Started")
-  emailSend.send(job.data.user,job.data.recip,job.data.mergeFields,job.data.subj,job.data.body,function(tokenError,newTokens){    if(tokenError){console.log(tokenError)}
+  emailSend.send(job.data.user,job.data.client,job.data.recip,job.data.mergeFields,job.data.subj,job.data.body,function(tokenError,newTokens){    if(tokenError){console.log(tokenError)}
     db.ref('/users/'+job.data.user.id+"/tokens").set(newTokens)
     done()
     console.log("INFO - "+job.data.user.email + " Send Done")
