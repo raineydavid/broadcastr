@@ -1,4 +1,5 @@
 var include       = require('../../include').include,
+    path          = require('path'),
     kue           = require('kue'),
     async         = require('async'),
     Hashids       = require('hashids'),
@@ -84,6 +85,6 @@ exports.track = function(req,res){
       ],function(err){
         console.log("INFO - Pixel Sent")
         if(err){console.log(err)}
-        res.sendFile('./pixel.png')
+        res.sendFile('pixel.png',{root:path.join(__dirname,'../../')})
       })
 }
