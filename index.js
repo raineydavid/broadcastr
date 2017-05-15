@@ -115,7 +115,7 @@ App.use(function(req,res,next){
   if(req.path.length>1){
     path = req.path
   }else{
-    trim(req.path,'/')
+    path = '/'+trim(req.path,'/')
   }
   console.log(path)
   console.log(req.session.user.pages.indexOf(path))
