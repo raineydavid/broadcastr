@@ -1,9 +1,9 @@
-var include     = require('include').include,
-    client      = include('/lib/database'),
-    google      = require('googleapis');
+var client      = require('./lib/database'),
+    google      = require('googleapis'),
+    redis       = require('redis'),
     kue         = require('kue'),
     queue       = kue.createQueue(
-                    {redis:process.env.REDISTOGO_URL}),
+                    {redis:process.env.REDISTOGO_URL});
     require('dotenv').config();
 
 if (process.env.REDISTOGO_URL) {
