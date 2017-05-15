@@ -45,10 +45,14 @@ var arrayToObjects = function(input,headers){
 };
 
 var trim = function(s, mask) {
+  if(s.length>1){
     while (~mask.indexOf(s[s.length - 1])) {
         s = s.slice(0, -1);
     }
     return s;
+  }else{
+    return s;
+  }
 };
 
 App.get('/register/:url_id/:timestamp',login.getPwParams);
@@ -104,19 +108,9 @@ App.use(function(req,res,next){
 });
 
 App.use(function(req,res,next){
-  var path = ''
-  console.log(req.session.user.pages)
-  console.log(req.path)
-  console.log(trim(req.path,'/'))
-  console.log(req.path.length)
-  if(req.path.length>1){
-    path = req.path
-  }else{
-    path = trim(req.path,'/')
-  }
   console.log(path)
-  console.log(req.session.user.pages.indexOf(path))
-  if(req.session.user.pages.indexOf(path)>-1){
+  console.log(req.session.user.pages.indexOf(trim(req.path,'/'))
+  if(req.session.user.pages.indexOf(trim(req.path,'/'))>-1){
     next();
   }else if(req.method==="POST"){
     next();
