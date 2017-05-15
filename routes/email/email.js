@@ -1,5 +1,7 @@
 var include       = require('../../include').include,
     kue           = require('kue'),
+    Hashids       = require('hashids'),
+    hashids       = new Hashids('pocket_square',8),
     queue         = kue.createQueue(
                     {redis:process.env.REDISTOGO_URL}),
     App           = include('/routes/app'),
