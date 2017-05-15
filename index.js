@@ -109,7 +109,9 @@ App.use(function(req,res,next){
 App.use(function(req,res,next){
   var path = ''
   console.log(req.session.user.pages)
+  console.log(req.path)
   console.log(trim(req.path,'/'))
+  console.log(req.path.length)
   if(req.path.length>1){
     path = req.path
   }else{
