@@ -1,4 +1,5 @@
-var client      = include('/lib/database'),
+var include     = require('/include').include,
+    client      = include('/lib/database'),
     google      = require('googleapis');
     kue         = require('kue'),
     queue       = kue.createQueue(
