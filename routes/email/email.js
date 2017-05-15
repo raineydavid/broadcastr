@@ -8,7 +8,7 @@ var include       = require('../../include').include,
                     {redis:process.env.REDISTOGO_URL}),
     App           = include('/routes/app'),
     client        = include('/lib/database'),
-    templates     = include('/routes/templates');
+    templates     = include('/routes/templates').templates;
 
 exports.getEmail = function(req,res){
   switch(req.params.page){
