@@ -14,13 +14,17 @@ var OAuth2 = google.auth.OAuth2,
     google.options({auth: oauth2Client});
 
 exports.getAuthUrl = function(req,res){
-  console.log("INFO - Gmail Auth Started");
-  var url = oauth2Client.generateAuthUrl({
-            access_type: 'offline',
-            scope: ['https://mail.google.com/']
-          });
+  switch(req.params.site){
+    case "gmail":
+      console.log("INFO - Gmail Auth Started");
+      var url = oauth2Client.generateAuthUrl({
+                access_type: 'offline',
+                scope: ['https://mail.google.com/']
+              });
 
-          res.redirect(url);
+              res.redirect(url);
+    break;
+  }
 };
 
 exports.saveTokens = function(req,res){

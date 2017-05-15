@@ -50,11 +50,7 @@ exports.getClientSelection = function(req,res){
 exports.postClientSelection = function(req,res){
     client.query("SELECT client_id,name,admin FROM "+client.schema+".clients WHERE client_id = $1",[req.body.client],function(err,client){
       req.session.client = client.rows[0];
-      if(req.session.user.tokens[0].type===null){
-        res.redirect('/#newUser');
-      }else{
-        res.redirect('/');
-      }
+      res.redirect('/')
     });
 };
 
