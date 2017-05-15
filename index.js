@@ -44,6 +44,16 @@ var arrayToObjects = function(input,headers){
   return array;
 };
 
+var trim = function(s, mask) {
+    while (~mask.indexOf(s[0])) {
+        s = s.slice(1);
+    }
+    while (~mask.indexOf(s[s.length - 1])) {
+        s = s.slice(0, -1);
+    }
+    return s;
+}
+
 App.get('/register/:url_id/:timestamp',login.getPwParams);
 App.get('/register',login.getPwSet);
 App.post('/register',login.postPwSet);
@@ -97,9 +107,7 @@ App.use(function(req,res,next){
 });
 
 App.use(function(req,res,next){
-  console.log(req.session.user.pages)
-  console.log(req.path)
-  if(req.session.user.pages.indexOf(req.path)>-1){
+  if(req.session.user.pages.indexOf(trim(req.path,'/'))>-1){
     next();
   }else if(req.method==="POST"){
     next();

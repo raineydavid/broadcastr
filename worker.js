@@ -1,6 +1,7 @@
 var client      = require('./lib/database'),
     google      = require('googleapis'),
     redis       = require('redis'),
+    url         = require('url'),
     kue         = require('kue'),
     queue       = kue.createQueue(
                     {redis:process.env.REDISTOGO_URL});
