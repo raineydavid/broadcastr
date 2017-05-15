@@ -6,13 +6,7 @@ var include       = require('../../include').include,
 
 exports.routes = {
   templates:function(ws){
-    FBApp.db.ref('/templates').once('value',function(snapshot){
-      if(snapshot.val()){
-        ws.send(JSON.stringify({id:"templates",data:{templates:snapshot.val().map(function(d){return snapshot.val()[d]})}}))
-      }else{
-        ws.send(JSON.stringify({id:"templates",data:{templates:[]}}))
-        console.log("WARNING - No Templates (Email Send)")
-      }
-    })
+      ws.send(JSON.stringify({id:"templates",data:{templates:[]}}));
+      console.log("WARNING - No Templates (Email Send)");
   }
 };
