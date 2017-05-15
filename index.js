@@ -107,9 +107,15 @@ App.use(function(req,res,next){
 });
 
 App.use(function(req,res,next){
+  var path = ''
   console.log(req.session.user.pages)
   console.log(trim(req.path,'/'))
-  if(req.session.user.pages.indexOf(trim(req.path,'/'))>-1){
+  if(req.path.length>1){
+    path = req.path
+  }else{
+    trim(req.path,'/')
+  }
+  if(req.session.user.pages.indexOf(path)>-1){
     next();
   }else if(req.method==="POST"){
     next();
