@@ -1,5 +1,6 @@
 var include       = require('../../include').include,
     kue           = require('kue'),
+    async         = require('async'),
     Hashids       = require('hashids'),
     hashids       = new Hashids('pocket_square',8),
     queue         = kue.createQueue(
