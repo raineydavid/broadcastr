@@ -117,6 +117,8 @@ App.use(function(req,res,next){
   }else{
     trim(req.path,'/')
   }
+  console.log(path)
+  console.log(req.session.user.pages.indexOf(path))
   if(req.session.user.pages.indexOf(path)>-1){
     next();
   }else if(req.method==="POST"){
