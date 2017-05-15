@@ -109,7 +109,7 @@ App.use(function(req,res,next){
 
 App.use(function(req,res,next){
   console.log(path)
-  console.log(req.session.user.pages.indexOf(trim(req.path,'/'))
+  console.log(req.session.user.pages.indexOf(trim(req.path,'/')))
   if(req.session.user.pages.indexOf(trim(req.path,'/'))>-1){
     next();
   }else if(req.method==="POST"){
