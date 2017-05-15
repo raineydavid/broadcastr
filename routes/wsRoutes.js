@@ -57,7 +57,7 @@ wss.on("connection",function(ws){
         case "email":
           switch(JSON.parse(d).id){
             case "templates":
-              routes.email.templates(function(err,data){
+              email.templates(function(err,data){
                 ws.send(JSON.stringify({id:"data",data:data}));
               });
             break;
