@@ -60,7 +60,6 @@ exports.track = function(req,res){
 
   console.log("INFO - Open Started for "+decoded_email+" from "+decoded_date)
 
-    if(dbErr){console.log(dbErr)}else{
       async.waterfall([
         function(callback){
           client.query("SELECT sender_id,client_id,sender_email,body FROM echo.activity_logs WHERE datecode = $1 AND recipient_email = $2",[decoded_date,decoded_email],function(err,result){
@@ -86,5 +85,4 @@ exports.track = function(req,res){
         if(err){console.log(err)}
         res.sendFile('./pixel.png')
       })
-    }
 }
