@@ -1,5 +1,9 @@
 var include       = require('../../include').include,
-    App           = include('/routes/app')
+    kue           = require('kue'),
+    queue         = kue.createQueue(
+                    {redis:process.env.REDISTOGO_URL}),
+    App           = include('/routes/app'),
+    client        = include('/lib/database'),
     templates     = include('/routes/templates');
 
 exports.getEmail = function(req,res){
@@ -16,39 +20,33 @@ exports.getEmail = function(req,res){
 exports.postEmail = function(req,res){
   switch(req.body.headerSelect){
     case "default":
-      FBApp.db.ref('/users/'+req.session.user.id).once("value",function(snapshot){
-        var user = snapshot.val()
-        user.id = req.session.user.id
-        queue.create('email',{
-          user:user,
-          client:req.session.client,
-          recip:arrayToObjects(parse.CSVToArray(req.body.recipients,"\t"),['email','name']).filter(function(d){return d.email!=""}),
-            mergeFields:[{merge:"|*NAME*|",key:"name"},{merge:"|*EMAIL*|",key:"email"}],
-          subj:req.body.subject,
-          body:req.body.body,
-        }).save(function(err){
-          if(err){console.log(err)}
-          console.log("INFO - Default Job Queued")
-          res.redirect('/email/send')
-        })
+      var user = req.session.user
+      queue.create('email',{
+        user:user,
+        client:req.session.client,
+        recip:arrayToObjects(parse.CSVToArray(req.body.recipients,"\t"),['email','name']).filter(function(d){return d.email!=""}),
+          mergeFields:[{merge:"|*NAME*|",key:"name"},{merge:"|*EMAIL*|",key:"email"}],
+        subj:req.body.subject,
+        body:req.body.body,
+      }).save(function(err){
+        if(err){console.log(err)}
+        console.log("INFO - Default Job Queued")
+        res.redirect('/email/send')
       })
     break;
     case "custom":
-      FBApp.db.ref('/users/'+req.session.user.id).once("value",function(snapshot){
-        var user = snapshot.val()
-        user.id = req.session.user.id
-        queue.create('email',{
-          user:user,
-          client:req.session.client,
-          recip:arrayToObjects(parse.CSVToArray(req.body.recipients).slice(1),parse.CSVToArray(req.body.recipients)[0]).filter(function(d){return d.email!=""}),
-          mergeFields:parse.CSVToArray(req.body.recipients)[0].map(function(d){return {merge:"|*"+d.toUpperCase()+"*|",key:d}}),
-          subj:req.body.subject,
-          body:req.body.body,
-        }).save(function(err){
-          if(err){console.log(err)}
-          console.log("INFO - Custom Job Queued")
-          res.redirect('/email/send')
-        })
+      var user = req.session.user
+      queue.create('email',{
+        user:user,
+        client:req.session.client,
+        recip:arrayToObjects(parse.CSVToArray(req.body.recipients).slice(1),parse.CSVToArray(req.body.recipients)[0]).filter(function(d){return d.email!=""}),
+        mergeFields:parse.CSVToArray(req.body.recipients)[0].map(function(d){return {merge:"|*"+d.toUpperCase()+"*|",key:d}}),
+        subj:req.body.subject,
+        body:req.body.body,
+      }).save(function(err){
+        if(err){console.log(err)}
+        console.log("INFO - Custom Job Queued")
+        res.redirect('/email/send')
       })
     break;
   }
