@@ -45,14 +45,11 @@ var arrayToObjects = function(input,headers){
 };
 
 var trim = function(s, mask) {
-    while (~mask.indexOf(s[0])) {
-        s = s.slice(1);
-    }
     while (~mask.indexOf(s[s.length - 1])) {
         s = s.slice(0, -1);
     }
     return s;
-}
+};
 
 App.get('/register/:url_id/:timestamp',login.getPwParams);
 App.get('/register',login.getPwSet);
@@ -115,7 +112,7 @@ App.use(function(req,res,next){
   if(req.path.length>1){
     path = req.path
   }else{
-    path = '/'+trim(req.path,'/')
+    path = trim(req.path,'/')
   }
   console.log(path)
   console.log(req.session.user.pages.indexOf(path))
