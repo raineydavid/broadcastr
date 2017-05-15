@@ -60,7 +60,6 @@ exports.track = function(req,res){
 
   console.log("INFO - Open Started for "+decoded_email+" from "+decoded_date)
 
-  pg.connect(database,function(dbErr,client,done){
     if(dbErr){console.log(dbErr)}else{
       async.waterfall([
         function(callback){
@@ -88,5 +87,4 @@ exports.track = function(req,res){
         res.sendFile('./pixel.png')
       })
     }
-  })
 }
