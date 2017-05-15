@@ -1,4 +1,4 @@
-var include     = require('/include').include,
+var include     = require('include').include,
     client      = include('/lib/database'),
     google      = require('googleapis');
     kue         = require('kue'),
