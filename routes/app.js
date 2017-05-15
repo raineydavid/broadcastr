@@ -4,6 +4,7 @@ var express       = require('express'),
     cookieParser  = require('cookie-parser'),
     session       = require('express-session'),
     http          = require('http'),
+    url           = require('url'),
     redis         = require('redis'),
     redisStore    = require('connect-redis')(session);
     require('dotenv').config();
