@@ -529,6 +529,8 @@ ws.onmessage = function(event){
           return d.text
         })
 
+        console.log(locatation.hash)
+
         if(location.hash==="#newUser"){
           $('#newUser').modal({
             backdrop: 'static',
