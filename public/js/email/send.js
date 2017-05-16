@@ -529,7 +529,8 @@ ws.onmessage = function(event){
           return d.text
         })
 
-        console.log(locatation.hash)
+        console.log(location.hash)
+        console.log(location)
 
         if(location.hash==="#newUser"){
           $('#newUser').modal({
