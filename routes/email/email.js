@@ -13,12 +13,14 @@ var include       = require('../../include').include,
 exports.getEmail = function(req,res){
   switch(req.params.page){
     case "send":
-
+      if(req.session.user.tokens[0].type===null&&req.query.state!="newUser"){
+        res.redirect('/email/send?state=newUser#newUser');
+      }else{
         res.send(templates.template.expand({
           title:"Echo - Send Email",
           js:"../js/email/send.js"
         }))
-      
+      }
     break;
   }
 }
