@@ -1,5 +1,6 @@
 var include       = require('../include').include,
     google        = require('googleapis'),
+    async         = require('async'),
     client        = include('/lib/database'),
     App           = include('/routes/app'),
     templates     = include('/routes/templates').templates;
