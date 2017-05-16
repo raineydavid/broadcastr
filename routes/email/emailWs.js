@@ -5,8 +5,8 @@ var include       = require('../../include').include,
     require('dotenv').config();
 
 exports.routes = {
-  templates:function(ws){
-      ws.send(JSON.stringify({id:"templates",data:{templates:[]}}));
+  templates:function(){
+      return (null,[])
       console.log("WARNING - No Templates (Email Send)");
   }
 };
