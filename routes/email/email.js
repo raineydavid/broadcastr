@@ -1,12 +1,10 @@
 var include       = require('../../include').include,
     path          = require('path'),
-    kue           = require('kue'),
     async         = require('async'),
     Hashids       = require('hashids'),
     hashids       = new Hashids('pocket_square',8),
-    queue         = kue.createQueue(
-                    {redis:process.env.REDISTOGO_URL}),
     App           = include('/routes/app'),
+    queue         = include('/routes/app').queue,
     client        = include('/lib/database'),
     parse         = include('/lib/parse'),
     templates     = include('/routes/templates').templates;
@@ -30,7 +28,6 @@ var arrayToObjects = function(input,headers){
 exports.getEmail = function(req,res){
   switch(req.params.page){
     case "send":
-    console.log(req.session.user)
       if(req.session.user.tokens[0].type===null&&req.query.state!="newUser"){
         res.redirect('/email/send?state=newUser#newUser');
       }else{

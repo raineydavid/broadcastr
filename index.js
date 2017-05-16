@@ -1,9 +1,5 @@
 var express     = require('express'),
     CronJob     = require('cron').CronJob,
-    kue         = require('kue'),
-    queue       = kue.createQueue(
-                    {redis:process.env.REDISTOGO_URL}),
-
     app         = require('./routes/app'),
     App         = app.app,
     Server      = app.server,

@@ -1,21 +1,9 @@
 var client      = require('./lib/database'),
-    google      = require('googleapis'),
-    redis       = require('redis'),
-    url         = require('url'),
-    kue         = require('kue'),
-    queue       = kue.createQueue(
-                    {redis:process.env.REDISTOGO_URL});
+    app         = require('./routes/app')
+    google      = require('googleapis');
     require('dotenv').config();
 
-if (process.env.REDISTOGO_URL) {
-    var rtg   = url.parse(process.env.REDISTOGO_URL);
-    var redClient = redis.createClient(rtg.port, rtg.hostname);
-    redClient.auth(rtg.auth.split(":")[1]);
-} else {
-      var redClient = redis.createClient();
-}
-
-queue.process('email',function(job,done){
+app.queue.process('email',function(job,done){
   console.log("INFO - "+job.data.user.email + " Send Started")
   emailSend.send(job.data.user,job.data.client,job.data.recip,job.data.mergeFields,job.data.subj,job.data.body,function(tokenError,newTokens){
     if(tokenError){console.log(tokenError)}

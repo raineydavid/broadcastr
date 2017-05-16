@@ -6,7 +6,10 @@ var express       = require('express'),
     http          = require('http'),
     url           = require('url'),
     redis         = require('redis'),
-    redisStore    = require('connect-redis')(session);
+    redisStore    = require('connect-redis')(session)
+    kue           = require('kue'),
+    queue         = kue.createQueue(
+                    {redis:process.env.REDISTOGO_URL});
     require('dotenv').config();
 
 if (process.env.REDISTOGO_URL) {
@@ -36,4 +39,5 @@ exports.server = server;
 exports.app_title = process.env.TITLE;
 exports.url = process.env.URL;
 exports.sessionHandler = sessionHandler;
+exports.queue = queue;
 console.log("http server listening on %d", port);
