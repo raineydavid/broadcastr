@@ -55,9 +55,12 @@ wss.on("connection",function(ws){
           });
         break;
         case "email":
+          console.log("email")
           switch(JSON.parse(d).id){
             case "templates":
+            console.log("templates")
               email.templates(function(err,data){
+                console.log("send")
                 ws.send(JSON.stringify({id:"data",data:data}));
               });
             break;

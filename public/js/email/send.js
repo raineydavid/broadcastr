@@ -402,6 +402,7 @@ ws.onmessage = function(event){
 
     break;
     case "data":
+      console.log(data)
       data.headerOptions = headerOptions
       data.mergeFields = []
       var footer = d3.select("body").select("footer")
