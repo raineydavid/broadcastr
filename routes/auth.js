@@ -14,6 +14,7 @@ var OAuth2 = google.auth.OAuth2,
     google.options({auth: oauth2Client});
 
 exports.getAuthUrl = function(req,res){
+  console.log(req.params.site)
   switch(req.params.site){
     case "gm":
       console.log("INFO - Gmail Auth Started");
