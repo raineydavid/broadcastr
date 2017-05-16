@@ -385,6 +385,7 @@ var tooltip = d3.select('body').append('div')
 
 ws.onopen = function(event){
     console.log('connected')
+    ws.send(JSON.stringify({type:"navbar"}))
   }
 
 ws.onmessage = function(event){
