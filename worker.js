@@ -1,4 +1,5 @@
 var client      = require('./lib/database'),
+    emailSend   = require('./lib/emailSend'),
     app         = require('./routes/app')
     google      = require('googleapis');
     require('dotenv').config();
