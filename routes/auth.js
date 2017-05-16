@@ -15,7 +15,7 @@ var OAuth2 = google.auth.OAuth2,
 
 exports.getAuthUrl = function(req,res){
   switch(req.params.site){
-    case "gmail":
+    case "gm":
       console.log("INFO - Gmail Auth Started");
       var url = oauth2Client.generateAuthUrl({
                 access_type: 'offline',
