@@ -6,7 +6,7 @@ var include       = require('../../include').include,
 
 exports.routes = {
   templates:function(cb){
-      return cb(null,[]);
+      return cb(null,{templates:[]});
       console.log("WARNING - No Templates (Email Send)");
   }
 };
