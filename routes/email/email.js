@@ -10,6 +10,22 @@ var include       = require('../../include').include,
     client        = include('/lib/database'),
     templates     = include('/routes/templates').templates;
 
+
+var arrayToObjects = function(input,headers){
+  var array = new Array;
+  input.forEach(function(row){
+    var output = new Object;
+
+    row.forEach(function(col,i){
+      output[headers[i]] = col;
+    });
+
+    array.push(output);
+  });
+  return array;
+};
+
+
 exports.getEmail = function(req,res){
   switch(req.params.page){
     case "send":
