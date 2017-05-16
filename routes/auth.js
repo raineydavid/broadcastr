@@ -15,7 +15,6 @@ var OAuth2 = google.auth.OAuth2,
     google.options({auth: oauth2Client});
 
 exports.getAuthUrl = function(req,res){
-  console.log(req.params.site)
   switch(req.params.site){
     case "gm":
       console.log("INFO - Gmail Auth Started");
@@ -53,7 +52,7 @@ exports.saveTokens = function(req,res){
                   callback(null,tokens.access_token);
                 });
               }else{
-                instance.query("SELECT access_token FROM "+client.schema+".creds WHERE user_id = $1 AND type = 'gmail'",[req.session.user.user_id],function(err,token){
+                instance.query("SELECT access_token FROM "+client.schema+".creds WHERE user_id = $1 AND type = $2",[req.session.user.user_id,'gmail'],function(err,token){
                   console.log("INFO - Got Access Token From Postgres");
                   callback(null,token.rows[0].access_token);
                 });
@@ -61,7 +60,7 @@ exports.saveTokens = function(req,res){
             },
             refresh_token:function(callback){
               if(tokens.refresh_token){
-                instance.query("INSERT INTO "+client.schema+".creds (user_id,type,refresh_token)  VALUES ($1,$2,$3)",[req.session.user.user_id,'gmail',tokens.refresh_token],function(err){
+                instance.query("UPDATE "+client.schema+".creds SET refresh_token = $1 WHERE user_id = $2 AND type = $3",[tokens.refresh_token,req.session.user.user_id,'gmail'],function(err){
                   console.log("INFO - OAuth Granted (Refresh Token)");
                   callback(null,tokens.refresh_token);
                 });
@@ -73,8 +72,17 @@ exports.saveTokens = function(req,res){
               }
             }
           },function(err,data){
-            req.session.user.tokens = data;
-            res.redirect('/');
+            if(err){
+              console.log(err);
+              console.log("ERROR - Gmail Tokens");
+              instance.query("ROLLBACK")
+              res.redirect('/error');
+            }else{
+              req.session.user.tokens = data;
+              console.log("INFO - Gmail Tokens Done")
+              instance.query("COMMIT")
+              res.redirect('/email/send');
+            }
           });
         });
       }
