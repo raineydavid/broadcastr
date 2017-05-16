@@ -5,8 +5,8 @@ var include       = require('../../include').include,
     require('dotenv').config();
 
 exports.routes = {
-  templates:function(){
-      return (null,[]);
+  templates:function(cb){
+      return cb(null,[]);
       console.log("WARNING - No Templates (Email Send)");
   }
 };
