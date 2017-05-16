@@ -346,7 +346,7 @@ modalBody.append("div")
         .text("Connect My Email")
         .style("margin","auto")
         .on("click",function(){
-          window.location.replace('/gm/auth/url')
+          window.location.replace('/auth/gm/url')
         })
 
 //Tooltip

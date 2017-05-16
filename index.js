@@ -133,4 +133,4 @@ App.post('/email/send',email.postEmail);
 App.get('/reports/:report',reports.getReports);
 
 App.get('/auth/:site/url',auth.getAuthUrl);
-App.get('/gm/auth',auth.saveTokens);
+App.get('/auth/gm',auth.saveTokens);
