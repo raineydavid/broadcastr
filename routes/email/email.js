@@ -8,6 +8,7 @@ var include       = require('../../include').include,
                     {redis:process.env.REDISTOGO_URL}),
     App           = include('/routes/app'),
     client        = include('/lib/database'),
+    parse         = include('/lib/parse'),
     templates     = include('/routes/templates').templates;
 
 
