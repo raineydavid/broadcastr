@@ -26,7 +26,7 @@ client.query("SELECT access_id as value,access_levels.name as text FROM "+client
 });
 };
 
-exports.client = function(where,andWhere,cb){
+exports.client = function(req,where,andWhere,cb){
 client.query("SELECT client_id as value,name as text FROM "+client.schema+".clients LEFT Join "+client.schema+".client_access USING(client_id) WHERE clients.disabled = FALSE AND client_access.disabled = FALSE AND user_id = $1 ",[req.session.user.id],function(err,clients){
   if(clients){
     return cb(err,clients.rows);

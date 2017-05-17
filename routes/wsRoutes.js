@@ -136,7 +136,7 @@ wss.on("connection",function(ws){
                     });
                   },
                   client:function(callback){
-                    settings.users.client(where,andWhere,function(err,data){
+                    settings.users.client(req,where,andWhere,function(err,data){
                       if(err){
                         console.log("ERROR - settings.users.client")
                       }
