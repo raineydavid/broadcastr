@@ -79,6 +79,7 @@ exports.saveTokens = function(req,res){
               res.redirect('/error');
             }else{
               req.session.user.tokens = data;
+              console.log(req.session.user)
               console.log("INFO - Gmail Tokens Done")
               instance.query("COMMIT")
               res.redirect('/email/send');
