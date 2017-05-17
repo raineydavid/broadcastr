@@ -78,9 +78,7 @@ exports.saveTokens = function(req,res){
               instance.query("ROLLBACK")
               res.redirect('/error');
             }else{
-              console.log(data)
-              req.session.user.tokens = data;
-              console.log(req.session.user)
+              req.session.user.tokens = [data];
               console.log("INFO - Gmail Tokens Done")
               instance.query("COMMIT")
               res.redirect('/email/send');
