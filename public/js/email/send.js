@@ -558,7 +558,10 @@ ws.onmessage = function(event){
            "image": true, //Button to insert an image. Default true,
            "color": false, //Button to change color of font
            "blockquote": false, //Blockquote
-           "size": 'xs' //default: none, other options are xs, sm, lg
+           "size": 'xs', //default: none, other options are xs, sm, lg
+           parser: function(html) {
+                return html;
+            }
       });
 
     $('.bootstrap-wysihtml5-insert-link-modal').on("shown.bs.modal",function(){
