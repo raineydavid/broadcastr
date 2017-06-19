@@ -41,6 +41,7 @@ var routes = {
 };
 
 wss.on("connection",function(ws){
+  console.log(ws)
   var req = ws.upgradeReq;
   var res = {writeHead: {}};
   sessionHandler(req,res,function(err){
