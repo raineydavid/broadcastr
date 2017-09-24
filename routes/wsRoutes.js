@@ -13,13 +13,18 @@ console.log("websocket server created");
 
 var routes = {
   pages:function(req,cb){
-    client.query("SELECT lower(replace(page_category_name,' ','')) as id,page_category_name as name,ARRAY_AGG(JSON_OBJECT(ARRAY['name','html'],ARRAY[pages.page_name,pages.link]) ORDER BY pages._order) as pages FROM "+client.schema+".page_categories LEFT JOIN "+client.schema+".pages ON pages.page_category_id = page_categories.page_category_id LEFT JOIN "+client.schema+".page_access ON page_access.page_id = pages.page_id LEFT JOIN "+client.schema+".user_access ON user_access.access_id = page_access.access_id AND user_access.disabled = FALSE WHERE user_id = $1 AND page_categories.display = TRUE AND pages.display = TRUE GROUP BY page_category_name,page_categories._order ORDER BY page_categories._order",[req.session.user.user_id],function(err,pages){
-      if(err){
-        console.log("ERROR - WS Pages Error");
-        console.log(err);
-      }
-      return cb(null,pages.rows);
-    });
+    if(!req.session.user){
+      console.log("ERROR - No User Session")
+      console.log(req.session)
+    }else{
+      client.query("SELECT lower(replace(page_category_name,' ','')) as id,page_category_name as name,ARRAY_AGG(JSON_OBJECT(ARRAY['name','html'],ARRAY[pages.page_name,pages.link]) ORDER BY pages._order) as pages FROM "+client.schema+".page_categories LEFT JOIN "+client.schema+".pages ON pages.page_category_id = page_categories.page_category_id LEFT JOIN "+client.schema+".page_access ON page_access.page_id = pages.page_id LEFT JOIN "+client.schema+".user_access ON user_access.access_id = page_access.access_id AND user_access.disabled = FALSE WHERE user_id = $1 AND page_categories.display = TRUE AND pages.display = TRUE GROUP BY page_category_name,page_categories._order ORDER BY page_categories._order",[req.session.user.user_id],function(err,pages){
+        if(err){
+          console.log("ERROR - WS Pages Error");
+          console.log(err);
+        }
+        return cb(null,pages.rows);
+      });
+    }
   },
   clients:function(req,cb){
     client.query("SELECT client_id as value,name as text FROM "+client.schema+".clients WHERE client_id in (SELECT client_id FROM "+client.schema+".client_access WHERE user_id = $1)",[req.session.user.user_id],function(err,clients){
