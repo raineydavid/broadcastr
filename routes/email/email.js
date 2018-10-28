@@ -26,7 +26,6 @@ var arrayToObjects = function(input,headers){
 
 
 exports.getEmail = function(req,res){
-  console.log(req.session.user)
   switch(req.params.page){
     case "send":
       if(!req.session.user.tokens&&req.query.state!="newUser"){

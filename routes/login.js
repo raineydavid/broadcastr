@@ -18,7 +18,6 @@ exports.getLogin = function(req,res){
 
 exports.postLogin = function(req,res){
   client.query("SELECT * FROM "+client.schema+".login($1)",[req.body.email],function(err,login){
-    console.log(login.rows)
     if(err||!login){
       console.log("ERROR - Login Error");
       console.log(err);
@@ -26,7 +25,6 @@ exports.postLogin = function(req,res){
     }else{
       if(login.rowCount===1){
         bcrypt.compare(req.body.password,login.rows[0].password,function(err,match){
-          console.log(match)
           if(match){
             req.session.user = login.rows[0];
             res.redirect('/account/switch-client');
