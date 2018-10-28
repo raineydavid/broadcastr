@@ -1,7 +1,6 @@
 var include       = require('../include').include,
     client        = include('/lib/database.js'),
     App           = include('/routes/app'),
-    FBApp         = include('/lib/firebase'),
     error         = include('/lib/error'),
     templates     = include('/routes/templates').templates,
     email         = include('/lib/transactionEmail'),
