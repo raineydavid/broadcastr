@@ -94,7 +94,7 @@ exports.postSettings = function(req,res){
               }else{
                 console.log("INFO - User Successfully Created");
                 console.log(req.body.email);
-                client.query("COMMIT");
+                instance.query("COMMIT");
                 done();
                 res.redirect('/settings/users');
               }
