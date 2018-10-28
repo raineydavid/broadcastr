@@ -1,6 +1,5 @@
 var include       = require('../../include').include,
     client        = include('/lib/database'),
-    FBApp         = include('/lib/firebase'),
     async         = require('async');
     require('dotenv').config();
 

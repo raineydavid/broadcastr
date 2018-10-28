@@ -17,8 +17,7 @@ var express     = require('express'),
 
 
     emailSend   = require('./lib/emailSend'),
-    parse       = require('./lib/parse'),
-    FBApp       = require('./lib/firebase');
+    parse       = require('./lib/parse');
     require('dotenv').config();
 
 var objectToArray = function(input){
