@@ -6,7 +6,7 @@ exports.getReports = function(req,res){
   switch(req.params.report){
     case "topline":
       res.send(templates.template.expand({
-        title:"Echo - Topline Report",
+        title:"Broadcastr - Topline Report",
         js:"./js/reports/topline.js"
       }))
     break;

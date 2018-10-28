@@ -48,7 +48,7 @@ var tooltip = d3.select('body').append('div')
         .style('background', 'white')
         .style("display","none")
         .style("z-index","1051")
-        .style("font-family","'Gotham SSm A','Gotham SSm B','Helvetica Neue',Helvetica,Arial,sans-serif")
+        .style("font-family","Raleway,'Helvetica Neue',Helvetica,Arial,sans-serif")
         .style("font-size",'11px')
 
 ws.onopen = function(event){
@@ -79,11 +79,11 @@ ws.onmessage = function(event){
         .attr("class","col-md-3")
 
       textCol.append("h3")
-        .text("Welcome to Echo!")
+        .text("Welcome to Broadcastr!")
 
       textCol.append("div")
         .attr("class","row col-xs-12")
-        .text("Echo is 270's tool for communicating with volunteer, prospects, or supporters over email. Our goal is to make you more efficient so you can spend more time organizing!")
+        .text("Broadcastr is a tool for communicating with volunteer, prospects, or supporters over email. Our goal is to make you more efficient so you can spend more time organizing!")
 
       var menuCol = contentDiv.append("div")
         .attr("class",'col-md-9 row'),

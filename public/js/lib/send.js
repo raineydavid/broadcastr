@@ -278,12 +278,12 @@ modalBody.append("h2")
   .attr("class","modal-title logoLightBlue-500")
   .attr("id","modalHeader")
   .style("margin-bottom","5px")
-  .text("Welcome to Echo!")
+  .text("Welcome to Broadcastr!")
 
 modalBody.append("div")
   .attr("class","row col-xs-12")
   .style("margin-bottom","20px")
-  .text("Echo is a tool to help you have one-on-one conversations with grassroots supporters over email.")
+  .text("Broadcastr is a tool to help you have one-on-one conversations with grassroots supporters over email.")
 
 modalBody.append("div")
   .attr("class","row col-xs-12")
@@ -304,7 +304,7 @@ modalBody.append("div")
         .text("Connect My Email")
         .style("margin","auto")
         .on("click",function(){
-          window.location.replace('/gm/auth/url')
+          window.open('/gm/auth/url')
         })
 
 //Tooltip
@@ -338,7 +338,7 @@ var tooltip = d3.select('body').append('div')
         .style('background', 'white')
         .style("display","none")
         .style("z-index","1051")
-        .style("font-family","'Gotham SSm A','Gotham SSm B','Helvetica Neue',Helvetica,Arial,sans-serif")
+        .style("font-family","Raleway,'Helvetica Neue',Helvetica,Arial,sans-serif")
         .style("font-size",'11px')
 
 ws.onopen = function(event){

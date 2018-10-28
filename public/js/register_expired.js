@@ -1,20 +1,10 @@
 var topBar = d3.select("body").append("div")
   .attr("class","topBar")
 
-  topBar.append("a")
-    .attr("href","/").append("img")
-    .attr("class","logo")
-    .attr("src","/logo.png")
-    .attr("height",d3.select("body").node().getBoundingClientRect().width*.04)
-    .on("load",function(){
-      topBar.select(".topBarText")
-        .style("height",topBar.select("img").node().getBoundingClientRect().height)
-        .style("line-height",topBar.select("img").node().getBoundingClientRect().height+"px")
-    })
 
     topBar.append("div")
     .attr("class","topBarText")
-    .text("Echo")
+    .text("Broadcastr")
     .style("float","left")
 
 var contentDiv = d3.select("body").append("div")

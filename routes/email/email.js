@@ -28,11 +28,11 @@ var arrayToObjects = function(input,headers){
 exports.getEmail = function(req,res){
   switch(req.params.page){
     case "send":
-      if(req.session.user.tokens[0].type===null&&req.query.state!="newUser"){
+      if((req.session.user.tokens&&req.session.user.tokens[0].type===null&&req.query.state!="newUser")){
         res.redirect('/email/send?state=newUser#newUser');
       }else{
         res.send(templates.template.expand({
-          title:"Echo - Send Email",
+          title:"Broadcastr - Send Email",
           js:"../js/email/send.js"
         }))
       }
@@ -83,7 +83,7 @@ exports.track = function(req,res){
 
       async.waterfall([
         function(callback){
-          client.query("SELECT sender_id,client_id,sender_email,body FROM echo.activity_logs WHERE datecode = $1 AND recipient_email = $2",[decoded_date,decoded_email],function(err,result){
+          client.query("SELECT sender_id,client_id,sender_email,body FROM broadcastr.activity_logs WHERE datecode = $1 AND recipient_email = $2",[decoded_date,decoded_email],function(err,result){
             if(err){callback(err)}{
               console.log("INFO - Send/Recipient Data Found")
               callback(err,result.rows[0])
@@ -92,7 +92,7 @@ exports.track = function(req,res){
         },
         function(result,callback){
           if(result){
-            client.query("INSERT INTO echo.activity_logs (timestamp,datecode,sender_id,sender_email,body,recipient_email,action,client_id) VALUES (current_timestamp,$1,$2,$3,$4,$5,'open',$6)",[decoded_date,result.sender_id,result.sender_email,result.body,decoded_email,result.client_id],function(dbErr){
+            client.query("INSERT INTO broadcastr.activity_logs (timestamp,datecode,sender_id,sender_email,body,recipient_email,action,client_id) VALUES (current_timestamp,$1,$2,$3,$4,$5,'open',$6)",[decoded_date,result.sender_id,result.sender_email,result.body,decoded_email,result.client_id],function(dbErr){
               console.log("INFO - Open Logged")
               callback(dbErr)
             })

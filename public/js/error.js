@@ -27,7 +27,7 @@ function error(body){
       .append("div")
         .attr("class","alert alert-danger")
         .attr("role","alert")
-        .html("An error occured during the last action that you attempted!<br><br>But don't worry, it's been logged and we're looking into it. If you have any questions, please email AJ Kahle at akahle@270strategies.com.<br><br>Thanks!")
+        .html("An error occured during the last action that you attempted!<br><br>But don't worry, it's been logged and we're looking into it. If you have any questions, please email AJ Kahle at ajkahle@gmail.com.<br><br>Thanks!")
 
     $("#error").modal('show')
 }

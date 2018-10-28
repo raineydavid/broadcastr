@@ -59,7 +59,7 @@ var tooltip = d3.select('body').append('div')
         .style('background', 'white')
         .style("display","none")
         .style("z-index","1051")
-        .style("font-family","'Gotham SSm A','Gotham SSm B','Helvetica Neue',Helvetica,Arial,sans-serif")
+        .style("font-family","Raleway,'Helvetica Neue',Helvetica,Arial,sans-serif")
         .style("font-size",'11px')
 
 ws.onopen = function(event){
@@ -167,8 +167,8 @@ ws.onopen = function(event){
                 elementClass:"form-control"
               },
               {
-                name:"twoseventy_lead",
-                label:"270 Lead",
+                name:"lead",
+                label:"Lead",
                 element:"select",
                 dataTransform:function(d){
                   return d

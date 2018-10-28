@@ -1,29 +1,14 @@
   var topBar = d3.select("body").append("div")
     .attr("class","topBar")
 
-    topBar.append("a")
-      .attr("href","/").append("img")
-      .attr("class","logo")
-      .attr("src","/logo.png")
-      .attr("height",d3.select("body").node().getBoundingClientRect().width*.04)
-      .on("load",function(){
-        topBar.select(".topBarText")
-          .style("height",topBar.select("img").node().getBoundingClientRect().height)
-          .style("line-height",topBar.select("img").node().getBoundingClientRect().height+"px")
-      })
-
       topBar.append("div")
       .attr("class","topBarText")
-      .text("Echo")
+      .text("Broadcastr")
       .style("float","left")
 
   var footer = d3.select("body").append("footer")
     .append("div")
     .attr("class","container")
-
-  footer.append("img")
-      .attr("src","/270FullLogoText.png")
-      .attr("height","30px")
 
   var body = d3.select("body").append("div")
 
@@ -67,7 +52,7 @@
       .attr("name","email")
       .attr("placeholder","Email")
       .attr("id","inputEmail")
-      .style("font-family","'Gotham SSm A','Gotham SSm B','Helvetica Neue',Helvetica,Arial,sans-serif, sans-serif")
+      .style("font-family","Raleway,'Helvetica Neue',Helvetica,Arial,sans-serif, sans-serif")
       .style("cursor","text")
 
   loginForm.append("div")
@@ -83,7 +68,7 @@
       .attr("placeholder","Password")
       .attr("id","inputPassword")
       .attr("type","password")
-      .style("font-family","'Gotham SSm A','Gotham SSm B','Helvetica Neue',Helvetica,Arial,sans-serif, sans-serif")
+      .style("font-family","Raleway,'Helvetica Neue',Helvetica,Arial,sans-serif, sans-serif")
       .style("cursor","text")
 
   var warning = loginForm.append("div")
@@ -110,7 +95,7 @@
         .style("cursor","pointer")
 
   var rememberLabel = rememberContainer.append("div").text("Remember Me")
-        .style("font-family","'Gotham SSm A','Gotham SSm B','Helvetica Neue',Helvetica,Arial,sans-serif, sans-serif")
+        .style("font-family","Raleway,'Helvetica Neue',Helvetica,Arial,sans-serif, sans-serif")
         .style("padding-left",rememberCheckbox.node().getBoundingClientRect().width)
         .style("padding-right","13.5px")
 

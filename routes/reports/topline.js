@@ -43,7 +43,7 @@ exports.toplines = function(cb){
 };
 
 exports.timeSeries = function(cb){
-  client.query("SELECT sender_id,(substring(datecode from 1 for 4)||'-'||substring(datecode from 5 for 2)||'-'||substring(datecode from 7 for 2)) as send_date,COUNT(CASE WHEN action = 'send' THEN recipient_email ELSE null END) as sends,COUNT(DISTINCT CASE WHEN action = 'open' THEN recipient_email ELSE null END) as unique_opens,COUNT(CASE WHEN action = 'open' THEN recipient_email ELSE null END) as opens FROM echo.activity_logs GROUP BY send_date,sender_id ORDER BY send_date",function(err,result){
+  client.query("SELECT sender_id,(substring(datecode from 1 for 4)||'-'||substring(datecode from 5 for 2)||'-'||substring(datecode from 7 for 2)) as send_date,COUNT(CASE WHEN action = 'send' THEN recipient_email ELSE null END) as sends,COUNT(DISTINCT CASE WHEN action = 'open' THEN recipient_email ELSE null END) as unique_opens,COUNT(CASE WHEN action = 'open' THEN recipient_email ELSE null END) as opens FROM broadcastr.activity_logs GROUP BY send_date,sender_id ORDER BY send_date",function(err,result){
     if(result){
       return cb(err,result.rows);
     }else{

@@ -1,13 +1,12 @@
 var include       = require('../include').include,
-    google        = require('googleapis'),
+    {google}      = require('googleapis'),
     async         = require('async'),
     client        = include('/lib/database'),
     App           = include('/routes/app'),
     templates     = include('/routes/templates').templates;
 
 //Google API Setup
-var OAuth2 = google.auth.OAuth2,
-    oauth2Client = new OAuth2(
+var oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
       process.env.GOOGLE_OAUTH_CALLBACK),

@@ -2,7 +2,7 @@
 <head>
   <title>{title}</title>
   <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-  <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,300,700' rel='stylesheet' type='text/css'>
+  <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
   <link rel="icon" type="image/jpg" href="../logo.jpg">
 
 </head>

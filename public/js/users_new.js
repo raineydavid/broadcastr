@@ -48,7 +48,7 @@ var tooltip = d3.select('body').append('div')
         .style('background', 'white')
         .style("display","none")
         .style("z-index","1051")
-        .style("font-family","'Gotham SSm A','Gotham SSm B','Helvetica Neue',Helvetica,Arial,sans-serif")
+        .style("font-family","Raleway,'Helvetica Neue',Helvetica,Arial,sans-serif")
         .style("font-size",'11px')
 
 ws.onopen = function(event){
@@ -199,11 +199,11 @@ var initialButton =  initialModalFooter.append("button")
         var userDiv = container.append("div")
           .attr("class","col-md-8")
           .attr("id","userDiv")
-          .style("font-family","'Gotham SSm A','Gotham SSm B','Helvetica Neue',Helvetica,Arial,sans-serif, sans-serif")
+          .style("font-family","Raleway,'Helvetica Neue',Helvetica,Arial,sans-serif, sans-serif")
 
         var faq = container.append("div")
           .attr("class","col-md-4")
-          .style("font-family","'Gotham SSm A','Gotham SSm B','Helvetica Neue',Helvetica,Arial,sans-serif, sans-serif")
+          .style("font-family","Raleway,'Helvetica Neue',Helvetica,Arial,sans-serif, sans-serif")
 
         faq.append("div")
             .attr("class","row")
@@ -351,7 +351,7 @@ var initialButton =  initialModalFooter.append("button")
       .attr("name","newUser")
       .attr("action","/users/create")
       .attr("method","POST")
-      .style("font-family","'Gotham SSm A','Gotham SSm B','Helvetica Neue',Helvetica,Arial,sans-serif, sans-serif")
+      .style("font-family","Raleway,'Helvetica Neue',Helvetica,Arial,sans-serif, sans-serif")
       .on("submit",function(d){
         if(clientMatches.length>0){
           d3.event.preventDefault()
