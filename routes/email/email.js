@@ -26,7 +26,6 @@ var arrayToObjects = function(input,headers){
 
 
 exports.getEmail = function(req,res){
-  
   switch(req.params.page){
     case "send":
       if(!req.session.user.creds&&req.query.state!="newUser"){
