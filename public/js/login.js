@@ -2,7 +2,7 @@
     .attr("class","topBar")
 
       topBar.append("div")
-      .attr("class","topBarText")
+      .attr("class","topBarText dark-blue-color")
       .text("Broadcastr")
       .style("float","left")
 
@@ -37,7 +37,7 @@
     .attr("name","loginForm")
 
   loginForm.append("div")
-    .attr("class","frame-header")
+    .attr("class","frame-header light-blue-bg")
     .text("Log In")
 
   loginForm.append("div")
@@ -112,7 +112,7 @@
       .style("margin","auto")
 
   var button = buttonDiv.append("button")
-      .attr("class","btn btn-default logoLightBlue-bg-500")
+      .attr("class","btn btn-default light-blue-bg")
       .attr("id","submitButton")
       .attr("value","submit")
       .text("Submit")

@@ -1,7 +1,7 @@
 var thisPage = '/settings/users',
     pageHeight = window.innerHeight,
     state = new Object,
-    colorArray = ["logoLightBlue-bg-500","accentGreen-bg-500","accentYellow-bg-500","accentRed-bg-500"],
+    colorArray = ["light-blue-bg","green-bg","red-bg","light-blue-bg"],
     textColorArray = ["color-white","gray-400","gray-600","gray-900","black"],
     offsetArray = ["col-md-offset-2","",""];
 

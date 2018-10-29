@@ -1,7 +1,6 @@
 /*Margin At Bottom Of All Pages*/
 .container-fluid{
-  margin-bottom:20px
-}
+  margin-bottom:20p}
 
 body{
   font-family: Raleway,'Helvetica Neue',Helvetica,Arial,sans-serif, sans-serif !important
@@ -28,7 +27,6 @@ body{
   padding-left: 15px;
   font-weight:500;
   font-size:28px;
-  color:#00ACD4;
 }
 
 .breadcrumbs{
@@ -185,7 +183,6 @@ footer>div>img{
 }
 
 .frame-header{
-  background-color: #17479E;
   color: white;
   width:250px;
   margin:auto;
@@ -2668,182 +2665,13 @@ rect:hover{
 .color-black {color: #555 !important}
 .black{background-color: #555 !important}
 
-/* Media Queries */
+.dark-blue-bg{background-color: #0069c0 !important;}
+.light-blue-bg{background-color:#2196f3 !important;}
+.green-bg{background-color:#00e676 !important;}
+.red-bg{background-color: #d50000 !important;}
 
-/* 270 Color classes */
-
-.logoDarkBlue-50 {color: #E1E7F2 !important}
-.logoDarkBlue-100 {color: #B7C6E1 !important}
-.logoDarkBlue-200 {color: #8BA3CF !important}
-.logoDarkBlue-300 {color: #5C7DBB !important}
-.logoDarkBlue-400 {color: #3962AC !important}
-.logoDarkBlue-500 {color: #17479E !important}
-.logoDarkBlue-600 {color: #14408F !important}
-.logoDarkBlue-700 {color: #123980 !important}
-.logoDarkBlue-800 {color: #103270 !important}
-.logoDarkBlue-900 {color: #0C2552 !important}
-
-.logoLightBlue-50 {color: #DEF4FA !important}
-.logoLightBlue-100 {color: #B0E5F2 !important}
-.logoLightBlue-200 {color: #80D6EA !important}
-.logoLightBlue-300 {color: #4CC4E1 !important}
-.logoLightBlue-400 {color: #26B8DA !important}
-.logoLightBlue-500 {color: #00ACD4 !important}
-.logoLightBlue-600 {color: #009CC0 !important}
-.logoLightBlue-700 {color: #008BAC !important}
-.logoLightBlue-800 {color: #007A96 !important}
-.logoLightBlue-900 {color: #005A6E !important}
-
-.accentIndigo-50 {color: #E1E6EC !important}
-.accentIndigo-100 {color: #B9C3D1 !important}
-.accentIndigo-200 {color: #8E9EB5 !important}
-.accentIndigo-300 {color: #607697 !important}
-.accentIndigo-400 {color: #3E5981 !important}
-.accentIndigo-500 {color: #1D3D6B !important}
-.accentIndigo-600 {color: #1A3761 !important}
-.accentIndigo-700 {color: #173156 !important}
-.accentIndigo-800 {color: #142B4C !important}
-.accentIndigo-900 {color: #0F1F38 !important}
-
-.accentTeal-50 {color: #DEEBEC !important}
-.accentTeal-100 {color: #B0CED2 !important}
-.accentTeal-200 {color: #80B1B7 !important}
-.accentTeal-300 {color: #4C919A !important}
-.accentTeal-400 {color: #267A84 !important}
-.accentTeal-500 {color: #00636F !important}
-.accentTeal-600 {color: #005A65 !important}
-.accentTeal-700 {color: #00505A !important}
-.accentTeal-800 {color: #00464E !important}
-.accentTeal-900 {color: #00333A !important}
-
-.accentGreen-50 {color: #EBF7F0 !important}
-.accentGreen-100 {color: #D0ECDB !important}
-.accentGreen-200 {color: #B3E0C6 !important}
-.accentGreen-300 {color: #94D3AE !important}
-.accentGreen-400 {color: #7DCA9D !important}
-.accentGreen-500 {color: #67C18C !important}
-.accentGreen-600 {color: #5DAF7F !important}
-.accentGreen-700 {color: #539C71 !important}
-.accentGreen-800 {color: #498963 !important}
-.accentGreen-900 {color: #356549 !important}
-
-.accentYellow-50 {color: #FFFADE !important}
-.accentYellow-100 {color: #FFF2B0 !important}
-.accentYellow-200 {color: #FFE180 !important}
-.accentYellow-300 {color: #FFE14C !important}
-.accentYellow-400 {color: #FFDA26 !important}
-.accentYellow-500 {color: #FFD400 !important}
-.accentYellow-600 {color: #E8C000 !important}
-.accentYellow-700 {color: #CFAC00 !important}
-.accentYellow-800 {color: #B59600 !important}
-.accentYellow-900 {color: #856E00 !important}
-
-.accentRed-50 {color: #FDE1E5 !important}
-.accentRed-100 {color: #FAB8C2 !important}
-.accentRed-200 {color: #F68D9D !important}
-.accentRed-300 {color: #F25E75 !important}
-.accentRed-400 {color: #EF3C58 !important}
-.accentRed-500 {color: #ED1A3B !important}
-.accentRed-600 {color: #D71735 !important}
-.accentRed-700 {color: #C0152F !important}
-.accentRed-800 {color: #A81229 !important}
-.accentRed-900 {color: #7C0D1E !important}
-
-.gray-50 {color: #FAFAFA !important}
-.gray-100 {color: #F5F5F5 !important}
-.gray-200 {color: #EEEEEE !important}
-.gray-300 {color: #E0E0E0 !important}
-.gray-400 {color: #BDBDBD !important}
-.gray-500 {color: #9E9E9E !important}
-.gray-600 {color: #757575 !important}
-.gray-700 {color: #616161 !important}
-.gray-800 {color: #424242 !important}
-.gray-900 {color: #212121 !important}
-
-.logoDarkBlue-bg-50 {background-color: #E1E7F2 !important}
-.logoDarkBlue-bg-100 {background-color: #B7C6E1 !important}
-.logoDarkBlue-bg-200 {background-color: #8BA3CF !important}
-.logoDarkBlue-bg-300 {background-color: #5C7DBB !important}
-.logoDarkBlue-bg-400 {background-color: #3962AC !important}
-.logoDarkBlue-bg-500 {background-color: #17479E !important}
-.logoDarkBlue-bg-600 {background-color: #14408F !important}
-.logoDarkBlue-bg-700 {background-color: #123980 !important}
-.logoDarkBlue-bg-800 {background-color: #103270 !important}
-.logoDarkBlue-bg-900 {background-color: #0C2552 !important}
-
-.logoLightBlue-bg-50 {background-color: #DEF4FA !important}
-.logoLightBlue-bg-100 {background-color: #B0E5F2 !important}
-.logoLightBlue-bg-200 {background-color: #80D6EA !important}
-.logoLightBlue-bg-300 {background-color: #4CC4E1 !important}
-.logoLightBlue-bg-400 {background-color: #26B8DA !important}
-.logoLightBlue-bg-500 {background-color: #00ACD4 !important}
-.logoLightBlue-bg-600 {background-color: #009CC0 !important}
-.logoLightBlue-bg-700 {background-color: #008BAC !important}
-.logoLightBlue-bg-800 {background-color: #007A96 !important}
-.logoLightBlue-bg-900 {background-color: #005A6E !important}
-
-.accentIndigo-bg-50 {background-color: #E1E6EC !important}
-.accentIndigo-bg-100 {background-color: #B9C3D1 !important}
-.accentIndigo-bg-200 {background-color: #8E9EB5 !important}
-.accentIndigo-bg-300 {background-color: #607697 !important}
-.accentIndigo-bg-400 {background-color: #3E5981 !important}
-.accentIndigo-bg-500 {background-color: #1D3D6B !important}
-.accentIndigo-bg-600 {background-color: #1A3761 !important}
-.accentIndigo-bg-700 {background-color: #173156 !important}
-.accentIndigo-bg-800 {background-color: #142B4C !important}
-.accentIndigo-bg-900 {background-color: #0F1F38 !important}
-
-.accentTeal-bg-50 {background-color: #DEEBEC !important}
-.accentTeal-bg-100 {background-color: #B0CED2 !important}
-.accentTeal-bg-200 {background-color: #80B1B7 !important}
-.accentTeal-bg-300 {background-color: #4C919A !important}
-.accentTeal-bg-400 {background-color: #267A84 !important}
-.accentTeal-bg-500 {background-color: #00636F !important}
-.accentTeal-bg-600 {background-color: #005A65 !important}
-.accentTeal-bg-700 {background-color: #00505A !important}
-.accentTeal-bg-800 {background-color: #00464E !important}
-.accentTeal-bg-900 {background-color: #00333A !important}
-
-.accentGreen-bg-50 {background-color: #EBF7F0 !important}
-.accentGreen-bg-100 {background-color: #D0ECDB !important}
-.accentGreen-bg-200 {background-color: #B3E0C6 !important}
-.accentGreen-bg-300 {background-color: #94D3AE !important}
-.accentGreen-bg-400 {background-color: #7DCA9D !important}
-.accentGreen-bg-500 {background-color: #67C18C !important}
-.accentGreen-bg-600 {background-color: #5DAF7F !important}
-.accentGreen-bg-700 {background-color: #539C71 !important}
-.accentGreen-bg-800 {background-color: #498963 !important}
-.accentGreen-bg-900 {background-color: #356549 !important}
-
-.accentYellow-bg-50 {background-color: #FFFADE !important}
-.accentYellow-bg-100 {background-color: #FFF2B0 !important}
-.accentYellow-bg-200 {background-color: #FFE180 !important}
-.accentYellow-bg-300 {background-color: #FFE14C !important}
-.accentYellow-bg-400 {background-color: #FFDA26 !important}
-.accentYellow-bg-500 {background-color: #FFD400 !important}
-.accentYellow-bg-600 {background-color: #E8C000 !important}
-.accentYellow-bg-700 {background-color: #CFAC00 !important}
-.accentYellow-bg-800 {background-color: #B59600 !important}
-.accentYellow-bg-900 {background-color: #856E00 !important}
-
-.accentRed-bg-50 {background-color: #FDE1E5 !important}
-.accentRed-bg-100 {background-color: #FAB8C2 !important}
-.accentRed-bg-200 {background-color: #F68D9D !important}
-.accentRed-bg-300 {background-color: #F25E75 !important}
-.accentRed-bg-400 {background-color: #EF3C58 !important}
-.accentRed-bg-500 {background-color: #ED1A3B !important}
-.accentRed-bg-600 {background-color: #D71735 !important}
-.accentRed-bg-700 {background-color: #C0152F !important}
-.accentRed-bg-800 {background-color: #A81229 !important}
-.accentRed-bg-900 {background-color: #7C0D1E !important}
-
-.gray-bg-50 {background-color: #FAFAFA !important}
-.gray-bg-100 {background-color: #F5F5F5 !important}
-.gray-bg-200 {background-color: #EEEEEE !important}
-.gray-bg-300 {background-color: #E0E0E0 !important}
-.gray-bg-400 {background-color: #BDBDBD !important}
-.gray-bg-500 {background-color: #9E9E9E !important}
-.gray-bg-600 {background-color: #757575 !important}
-.gray-bg-700 {background-color: #616161 !important}
-.gray-bg-800 {background-color: #424242 !important}
-.gray-bg-900 {background-color: #212121 !important}
+.dark-blue-color{color:#0069c0 !important;}
+.light-blue-color{color:#2196f3 !important;}
+.green-color{color:#00e676 !important;}
+.red-color{color:#d50000 !important;}
+.white-color{color:white !important;}

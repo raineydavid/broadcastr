@@ -10,7 +10,7 @@ function navBar(body,data,callback){
 
   var collapseButton = navbarHeader.append("button")
       .attr("type","button")
-      .attr("class","navbar-toggle collapsed accentRed-bg-500")
+      .attr("class","navbar-toggle collapsed red-bg")
       .attr("data-toggle","collapse")
       .attr("data-target","#main-navbar-collapse")
       .attr("aria-expanded","false")
@@ -23,7 +23,7 @@ function navBar(body,data,callback){
     })
 
   navbarHeader.append("div")
-        .attr("class","topBarText")
+        .attr("class","topBarText dark-blue-color")
         .text("Broadcastr")
         .style("float","left")
 

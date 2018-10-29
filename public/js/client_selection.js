@@ -53,7 +53,7 @@ ws.onmessage = function(event){
         .attr("name","selectionForm")
 
       selectionForm.append("div")
-        .attr("class","frame-header")
+        .attr("class","frame-header light-blue-bg")
         .text("Select Client")
 
       selectionForm.append("div")
@@ -83,7 +83,7 @@ ws.onmessage = function(event){
           var button = buttonDiv.append("button")
               .style("margin","auto")
               .style("display","block")
-              .attr("class","btn btn-default logoLightBlue-bg-500")
+              .attr("class","btn btn-default light-blue-bg")
               .attr("id","submitButton")
               .attr("value","submit")
               .text("Submit")

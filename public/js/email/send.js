@@ -208,7 +208,7 @@ var thisPage = '/email/send',
             element:"button",
             type:"button",
             class:"col-md-2 buttonDiv",
-            elementClass:"btn btn-default logoLightBlue-bg-500 msg-btn"
+            elementClass:"btn btn-default light-blue-bg msg-btn"
             /*onClick:function(){
               $("#previewEmail").modal()
             }*/
@@ -242,7 +242,7 @@ var thisPage = '/email/send',
             label:"Add Text",
             element:"button",
             class:"col-md-2 buttonDiv",
-            elementClass:"btn btn-default logoLightBlue-bg-500 msg-btn",
+            elementClass:"btn btn-default light-blue-bg msg-btn",
             type:"button",
             onClick:function(){
               insertAtCursor(d3.select("#body").node(),d3.select("#mergeText").node().value)
@@ -270,7 +270,7 @@ var thisPage = '/email/send',
             element:"button",
             type:"submit",
             class:"col-md-1 buttonDiv bottomRow",
-            elementClass:"btn btn-default logoLightBlue-bg-500"
+            elementClass:"btn btn-default light-blue-bg"
             /*onClick:function(){
               $("#previewEmail").modal()
             }*/
@@ -342,7 +342,7 @@ modalBody.append("div")
   .append("div")
     .attr("class","buttonDiv col-xs-12")
       .append("button")
-        .attr("class","btn btn-default logoLightBlue-bg-500")
+        .attr("class","btn btn-default light-blue-bg")
         .text("Connect My Email")
         .style("margin","auto")
         .on("click",function(){
