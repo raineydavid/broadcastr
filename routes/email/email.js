@@ -29,11 +29,7 @@ exports.getEmail = function(req,res){
   switch(req.params.page){
     case "send":
       if(!req.session.user.creds&&req.query.state!="newUser"){
-        res.send(templates.template.expand({
-          title:"Broadcastr - Send Email",
-          js:"../js/email/send.js"
-        }))
-        
+         res.redirect('/email/send?state=newUser#newUser');
       }else{
         res.send(templates.template.expand({
           title:"Broadcastr - Send Email",
