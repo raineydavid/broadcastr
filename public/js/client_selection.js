@@ -18,7 +18,7 @@ ws.onmessage = function(event){
 
 
           topBar.append("div")
-          .attr("class","topBarText")
+          .attr("class","topBarText dark-blue-color")
           .text("Broadcastr")
           .style("float","left")
 
