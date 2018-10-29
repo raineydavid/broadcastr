@@ -24,7 +24,7 @@
 
       <fieldset>
         <p>{password_set}</p>
-        <br><button type="submit" value="submit" class="button raised logoLightBlue-bg-500 color-white">Register</button>
+        <br><button type="submit" value="submit" class="button raised light-blue-bg color-white">Register</button>
 
       </fieldset>
     </form>

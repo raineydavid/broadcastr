@@ -228,7 +228,7 @@ var thisPage = '/email/send',
             label:"Preview",
             element:"button",
             class:"col-md-1 buttonDiv bottomRow",
-            elementClass:"btn btn-default logoLightBlue-bg-500"
+            elementClass:"btn btn-default light-blue-bg"
             /*onClick:function(){
               $("#previewEmail").modal()
             }*/
@@ -300,7 +300,7 @@ modalBody.append("div")
   .append("div")
     .attr("class","buttonDiv col-xs-12")
       .append("button")
-        .attr("class","btn btn-default logoLightBlue-bg-500")
+        .attr("class","btn btn-default light-blue-bg")
         .text("Connect My Email")
         .style("margin","auto")
         .on("click",function(){

@@ -22,7 +22,7 @@
 
       <fieldset>
         <p>{email}</p>
-        <br><button type="submit" value="submit" class="button raised logoLightBlue-bg-500 color-white">Reset Password</button>
+        <br><button type="submit" value="submit" class="button raised light-blue-bg color-white">Reset Password</button>
 
       </fieldset>
     </form>

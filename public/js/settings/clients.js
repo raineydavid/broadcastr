@@ -183,7 +183,7 @@ ws.onopen = function(event){
                 element:"button",
                 type:"submit",
                 class:"col-xs-2 save-btn",
-                elementClass:"btn btn-default logoLightBlue-bg-500"
+                elementClass:"btn btn-default light-blue-bg"
               }
             ]
           }],
@@ -241,7 +241,7 @@ ws.onopen = function(event){
             element:"button",
             type:"submit",
             class:"col-xs-2 modal-btn",
-            elementClass:"btn btn-default logoLightBlue-bg-500"
+            elementClass:"btn btn-default light-blue-bg"
           }],
           modals = [
             {
@@ -298,7 +298,7 @@ ws.onopen = function(event){
                       element:"button",
                       type:"submit",
                       class:"col-xs-2 modal-btn",
-                      elementClass:"btn btn-default logoLightBlue-bg-500"
+                      elementClass:"btn btn-default light-blue-bg"
                     }
                   ]
                 },
