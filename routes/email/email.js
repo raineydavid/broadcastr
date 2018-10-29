@@ -26,8 +26,8 @@ var arrayToObjects = function(input,headers){
 
 
 exports.getEmail = function(req,res){
+  console.log(req.session.user)
   switch(req.params.page){
-    console.log(req.session.user)
     case "send":
       if(!req.session.user.tokens&&req.query.state!="newUser"){
         res.redirect('/email/send?state=newUser#newUser');
