@@ -25,6 +25,8 @@
 <script src="../js/lib/parse.js" type="text/javascript"></script>
 <script src="../js/error.js" type="text/javascript"></script>
 <script src="../js/ref/bootstrap3-wysihtml5.all.min.js" type="text/javascript"></script>
+<script src="../js/ref/bootstrap-filestyle.js" type="text/javascript"></script>
+<script src="../js/ref/papaparse.js" type="text/javascript"></script>
 <script src={js} type="text/javascript"></script>
 
 </body>

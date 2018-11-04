@@ -98,7 +98,15 @@ var thisPage = '/email/send',
                     d3.select("#recipientsCleaned").text(jsonRender(CSVToArray(recip).slice(1),CSVToArray(recip)[0],'\n'));
                     emailCheck(recip)
                     d3.select("#mergeFields").selectAll("option")
-                        .data(CSVToArray(recip)[0].map(function(merge){
+                        .data(CSVToArray(recip)[0].filter(function(merge){
+                          RE = new RegExp("(email)", "gi");
+                          var emailkey = merge.replace(RE, "").length;
+
+                          console.log(key.length-emailKey)
+
+                          return (key.length-emailkey)===0
+                        }).map(function(merge){
+                          console.log(merge)
                           return {text:merge,value:"|*"+merge.toUpperCase()+"*|"}
                         }))
                         .enter().append("option")
@@ -112,6 +120,19 @@ var thisPage = '/email/send',
                   }
                 break;
               }
+            }
+          },
+          {
+            name:"upload",
+            label:"Upload",
+            labelClass:"helpIcon",
+            element:"input",
+            type:"file",
+            class:"col-xs-3 form-group",
+            elementClass:"form-control filestyle",
+            tooltip:"Upload an export from VAN",
+            onChange:function(d){
+
             }
           },
           {
@@ -139,8 +160,13 @@ var thisPage = '/email/send',
                       d3.select("#inputWarning").text("First column must be email!")
                     }else if(CSVToArray(d)[0][1].indexOf("@")>-1){
                       d3.select("#inputWarning").text("Second column must be name, not email!")
-                    }else{
+                    }else if(CSVToArray(d).length>500){
+                      d3.select("#inputWarning").text("That's too many names! Try sending in batches.")
+                      d3.select("#sendButton").attr("disabled","disabled")
+                    }
+                    else{
                       d3.select("#inputWarning").text("")
+                      d3.select("#sendButton").attr("disabled",false)
                     }
                     d3.select("#mergeFields").selectAll("option")
                         .data([{text:"email",value:"|*EMAIL*|"},{text:"name",value:"|*NAME*|"}])
@@ -573,6 +599,43 @@ ws.onmessage = function(event){
           .text("Links must start with https://www. to be valid. Do not include any link sourcing, it will automatically be added to your URL.")
       }
     })
+
+    $(":file").filestyle({input: false,btnClass:"primary",icon:false});
+    $(".bootstrap-filestyle").attr("class","bootstrap-filestyle")
+    $("label.btn.btn-default").attr("class","btn btn-default light-blue-bg")
+
+    $('input[type=file]').change(function(d){
+      var thisId = $(this).attr('id');
+      var file = document.getElementById(thisId).files[0];
+
+      var reader = new FileReader();
+
+			reader.onload = function(e) {
+        $("#headerSelect").val("custom")
+        d3.select("#recipients").text(e.target.result)
+
+        d3.select("#recipientsCleaned").text(jsonRender(CSVToArray(e.target.result).slice(1).filter(function(d){
+          return d.email != ""
+        }),CSVToArray(e.target.result)[0],'\n'));
+        emailCheck(e.target.result)
+        d3.select("#mergeFields").selectAll("option")
+            .data(CSVToArray(e.target.result)[0].map(function(merge){
+              return {text:merge,value:"|*"+merge.toUpperCase()+"*|"}
+            }))
+            .enter().append("option")
+            .text(function(d){
+              return d.text
+            })
+            .attr("value",function(d){
+              return d.value
+            })
+        d3.select("#mergeText").attr("value","|*"+CSVToArray(e.target.result)[0][0].toUpperCase()+"*|")
+				console.log(e)
+			};
+
+			reader.readAsText(file);
+
+    });
 
     break;
   }

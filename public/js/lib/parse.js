@@ -13,7 +13,6 @@
       if (numTabs > numCommas) {
         columnDelimiter = "\t"
       };
-
       // kill extra empty lines
       RE = new RegExp("^" + rowDelimiter + "+", "gi");
       strData = strData.replace(RE, "");
@@ -115,8 +114,16 @@ var jsonRender = function (dataGrid, headerNames, newLine) {
       outputText += "{";
       for (var j=0; j < numColumns; j++) {
           var rowOutput = '"' + ( row[j] || "" ) + '"';
+          var key = headerNames[j]
 
-      outputText += ('"'+headerNames[j] +'"' + ":" + rowOutput );
+          RE = new RegExp("(email)", "gi");
+          var emailkey = key.replace(RE, "").length;
+
+          if(key.length-emailkey>0){
+            key = "email"
+          }
+
+      outputText += ('"'+key +'"' + ":" + rowOutput );
 
         if (j < (numColumns-1)) {outputText+=","};
       };
@@ -125,5 +132,5 @@ var jsonRender = function (dataGrid, headerNames, newLine) {
     };
     outputText += "]";
 
-    return outputText;
+    return outputText
   }
