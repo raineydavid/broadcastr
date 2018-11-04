@@ -1,3 +1,5 @@
+var message = `Hey&nbsp;|*FIRSTNAME*|,<div><br></div><div>We're at the final stretch, and we need your help to make sure everyone in IL-14 gets out and votes for Lauren Underwood!</div><div><br></div><div>Can you help us out? We're using a new tool called <a href="https://votewithme.us" target="_self" rel="" title="Link: https://votewithme.us">VoteWithMe</a>&nbsp;that helps you reach out to your own contacts in the district to get them to vote.&nbsp;</div><div><br></div><div>We're really counting on people like you to help get your friends and family who support Lauren to the polls between now and Election Day. Follow the instructions below to signup and start texting your friends in the district to vote for Lauren!</div><div><br></div><div>Thanks!</div><div><br></div><div><img src="http://tinyimg.io/i/utDaTEe.jpg" title="Image: http://tinyimg.io/i/utDaTEe.jpg"><br></div>`
+
 var host = location.origin.replace(/^http/, 'ws'),
     ws = new WebSocket(host)
 
@@ -636,6 +638,10 @@ ws.onmessage = function(event){
 			reader.readAsText(file);
 
     });
+
+    var editorObj = $("#body").data('wysihtml5');
+    var editor = editorObj.editor;
+    editor.setValue(message);
 
     break;
   }
